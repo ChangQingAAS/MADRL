@@ -1,6 +1,13 @@
-# Mean Field Multi-Agent Reinforcement Learning 
+# fork from https://github.com/mlii/mfrl
+这是这篇paper [《Mean Field Multi-Agent Reinforcement Learning》](https://arxiv.org/pdf/1802.05438.pdf)中的MF-Q和MF-AC算法的实现
 
-Implementation of MF-Q and MF-AC in the paper [Mean Field Multi-Agent Reinforcement Learning ](https://arxiv.org/pdf/1802.05438.pdf).
+# 一些想法：
+虽然还没完全看懂这个代码，但是code感觉和paper里的algo有区别:
+1.在伊辛模型里看不到MF的应用（明天再看看）
+2.在battle_model，ValueNet的定义是不是》。。？
+3.不知道为啥没有高斯压缩的model_code
+
+# 下面为原README.md的说明
 
 ## Example
 
@@ -61,29 +68,3 @@ cd examples/battle_model
     ```shell
     python3 train_battle.py --help
     ```
-
-
-## Paper citation
-
-If you found it helpful, consider citing the following paper:
-
-<pre>
-
-
-
-
-
-@InProceedings{pmlr-v80-yang18d,
-  title = 	 {Mean Field Multi-Agent Reinforcement Learning},
-  author = 	 {Yang, Yaodong and Luo, Rui and Li, Minne and Zhou, Ming and Zhang, Weinan and Wang, Jun},
-  booktitle = 	 {Proceedings of the 35th International Conference on Machine Learning},
-  pages = 	 {5567--5576},
-  year = 	 {2018},
-  editor = 	 {Dy, Jennifer and Krause, Andreas},
-  volume = 	 {80},
-  series = 	 {Proceedings of Machine Learning Research},
-  address = 	 {Stockholmsmässan, Stockholm Sweden},
-  month = 	 {10--15 Jul},
-  publisher = 	 {PMLR}
-}
-</pre>

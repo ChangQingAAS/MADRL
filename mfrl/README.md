@@ -3,8 +3,11 @@
 
 # 一些想法：
 虽然还没完全看懂这个代码，但是code感觉和paper里的algo有区别:
+
 1.在伊辛模型里看不到MF的应用（明天再看看）
+
 2.在battle_model，ValueNet的定义是不是》。。？
+
 3.不知道为啥没有高斯压缩的model_code
 
 # 下面为原README.md的说明

@@ -9,7 +9,7 @@ class DQN(base.ValueNet):
     def __init__(self, sess, name, handle, env, sub_len, memory_size=2**10, batch_size=64, update_every=5):
 
         super().__init__(sess, env, handle, name, update_every=update_every)
-        # 定义经验
+        # 定义经验缓冲区，sub_len是啥？
         self.replay_buffer = tools.MemoryGroup(self.view_space, self.feature_space, self.num_actions, memory_size, batch_size, sub_len)
         self.sess.run(tf.global_variables_initializer())
 
@@ -20,16 +20,20 @@ class DQN(base.ValueNet):
         self.replay_buffer.tight()
         batch_num = self.replay_buffer.get_batch_num()
 
+        # 循环一个批次
         for i in range(batch_num):
+            # 从经验重放区随机取一个
             obs, feats, obs_next, feat_next, dones, rewards, actions, masks = self.replay_buffer.sample()
+            # 计算目标Q值
             target_q = self.calc_target_q(obs=obs_next, feature=feat_next, rewards=rewards, dones=dones)
+            # 训练后得到损失函数的值和Q值
             loss, q = super().train(state=[obs, feats], target_q=target_q, acts=actions, masks=masks)
 
             self.update()
 
             if i % 50 == 0:
                 print('[*] LOSS:', loss, '/ Q:', q)
-
+    # 保存模型
     def save(self, dir_path, step=0):
         model_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.name_scope)
         saver = tf.train.Saver(model_vars)
@@ -38,7 +42,7 @@ class DQN(base.ValueNet):
         saver.save(self.sess, file_path)
 
         print("[*] Model saved at: {}".format(file_path))
-
+    # 加载模型
     def load(self, dir_path, step=0):
         model_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.name_scope)
         saver = tf.train.Saver(model_vars)
@@ -63,13 +67,14 @@ class MFQ(base.ValueNet):
             'sub_len': sub_len
         }
 
-        self.train_ct = 0
+        self.train_ct = 0# ？
         self.replay_buffer = tools.MemoryGroup(**config)
         self.update_every = update_every
 
     def flush_buffer(self, **kwargs):
         self.replay_buffer.push(**kwargs)
 
+    # 算法综合在train()函数中,但是这个好像只有更新网络参数的部分，没有前面选动作，做动作，观察的部分
     def train(self):
         self.replay_buffer.tight()
         batch_name = self.replay_buffer.get_batch_num()

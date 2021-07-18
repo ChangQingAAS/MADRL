@@ -4,15 +4,16 @@ import tensorflow as tf
 
 from . import tools
 
-
+# AC算法
 class ActorCritic:
+    # value_coef 值网络系数？ ent_coef是啥
     def __init__(self, sess, name, handle, env, value_coef=0.1, ent_coef=0.08, gamma=0.95, batch_size=64, learning_rate=1e-4):
         self.sess = sess
         self.env = env
 
         self.name = name
         self.view_space = env.get_view_space(handle)
-        self.feature_space = env.get_feature_space(handle)
+        self.feature_space = env.get_feature_space(handle)# feature是啥？
         self.num_actions = env.get_action_space(handle)[0]
         # 伽玛 折扣因子？
         self.gamma = gamma
@@ -76,11 +77,12 @@ class ActorCritic:
         action = tf.placeholder(tf.int32, [None])
         reward = tf.placeholder(tf.float32, [None])
 
-        hidden_size = [256]
+        hidden_size = [256]# 这个是啥？
 
         # fully connected
         # notes: numpy.prod(a, axis=None, dtype=None, out=None, ) 返回给定轴上的数组元素的乘积。
         # tf.shapes() 输入数组，输出该数组的维度
+        # flatten_view 是最终观察吗？
         flatten_view = tf.reshape(input_view, [-1, np.prod([v.value for v in input_view.shape[1:]])])
         '''
         tf.layers.dense()部分参数解释:
@@ -104,42 +106,52 @@ class ActorCritic:
 
         policy = tf.layers.dense(dense / 0.1, units=self.num_actions, activation=tf.nn.softmax)
         """
-        tf.clip_by_value(y,1e-10,1.0)， 
-        功能：可以将一个张量中的数值限制在一个范围之内。
-        （可以避免一些运算错误:可以保证在进行log运算时，不会出现log0这样的错误或者大于1的概率）
-        参数：
-        当y小于1e-10时，输出1e-10；
-        当y大于1e-10小于1.0时，输出原值；
-        当y大于1.0时，输出1.0
+            tf.clip_by_value(y,1e-10,1.0)
+            功能：可以将一个张量中的数值限制在一个范围之内。
+            （可以避免一些运算错误:可以保证在进行log运算时，不会出现log0这样的错误或者大于1的概率）
+            参数：
+            当y小于1e-10时，输出1e-10；
+            当y大于1e-10小于1.0时，输出原值；
+            当y大于1.0时，输出1.0
         """
         policy = tf.clip_by_value(policy, 1e-10, 1-1e-10)
 
         """
         tf.multinomial(logits, num_samples, seed=None, name=None)
-        从multinomial分布中采样，样本个数是num_samples，每个样本被采样的概率由logits给出
+        从multinomial分布中采样，取样个数是num_samples，
+        每个样本被采样的概率由logits给出，样本空间为[0,len(logits)]
         """
         self.calc_action = tf.multinomial(tf.log(policy), 1)
 
         value = tf.layers.dense(dense, units=1)
         value = tf.reshape(value, (-1,))
 
+        # 生成动作空间的独热掩码
         action_mask = tf.one_hot(action, self.num_actions)
-        advantage = tf.stop_gradient(reward - value)
+        advantage = tf.stop_gradient(reward - value)# ？？
 
-        log_policy = tf.log(policy + 1e-6)
+        log_policy = tf.log(policy + 1e-6)# 防止过小？
+        # tf.reduce_sum是求和函数，策略乘以动作空间 = 预测动作？
         log_prob = tf.reduce_sum(log_policy * action_mask, axis=1)
 
+        # tf.reduce_mean 函数用于计算张量tensor沿着指定的数轴（tensor的某一维度）上的的平均值，
+        # 主要用作降维或者计算tensor（图像）的平均值。
         pg_loss = -tf.reduce_mean(advantage * log_prob)
         vf_loss = self.value_coef * tf.reduce_mean(tf.square(reward - value))
         neg_entropy = self.ent_coef * tf.reduce_mean(tf.reduce_sum(policy * log_policy, axis=1))
         total_loss = pg_loss + vf_loss + neg_entropy
 
-        # train op (clip gradient)
+        # 训练操作 (clip gradient)
+        # Gradient Clipping的引入是为了处理gradient explosion或者gradients vanishing的问题。
+        # 当在一次迭代中权重的更新过于迅猛的话，很容易导致loss divergence。
+        # Gradient Clipping的直观作用就是让权重的更新限制在一个合适的范围。
+        # adamoptimizer 反向传播优化参数
         optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate)
         gradients, variables = zip(*optimizer.compute_gradients(total_loss))
         gradients, _ = tf.clip_by_global_norm(gradients, 5.0)
         self.train_op = optimizer.apply_gradients(zip(gradients, variables))
 
+        # 反向传播训练方法：以减小loss值为优化目标
         train_op = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(total_loss)
 
         self.input_view = input_view
@@ -149,16 +161,18 @@ class ActorCritic:
 
         self.policy, self.value = policy, value
         self.train_op = train_op
+        # 策略梯度损失，，reg_loss是正则系数？
         self.pg_loss, self.vf_loss, self.reg_loss = pg_loss, vf_loss, neg_entropy
         self.total_loss = total_loss
 
     def train(self):
-        # calc buffer size
+        # 计算缓冲区大小
         n = 0
         # batch_data = sample_buffer.episodes()
         batch_data = self.replay_buffer.episodes()
         self.replay_buffer = tools.EpisodesBuffer()
 
+        # episode 是回合的意思
         for episode in batch_data:
             n += len(episode.rewards)
 
@@ -169,7 +183,7 @@ class ActorCritic:
         view, feature = self.view_buf, self.feature_buf
         action, reward = self.action_buf, self.reward_buf
 
-        ct = 0
+        ct = 0# ？
         gamma = self.gamma
         # collect episodes from multiple separate buffers to a continuous buffer
         for episode in batch_data:
@@ -183,6 +197,7 @@ class ActorCritic:
                 self.input_feature: [f[-1]],
             })[0]
 
+            # 反转
             for i in reversed(range(m)):
                 keep = keep * gamma + r[i]
                 r[i] = keep
@@ -195,7 +210,7 @@ class ActorCritic:
 
         assert n == ct
 
-        # train
+        # 训练
         _, pg_loss, vf_loss, ent_loss, state_value = self.sess.run(
             [self.train_op, self.pg_loss, self.vf_loss, self.reg_loss, self.value], feed_dict={
                 self.input_view: view,
@@ -239,10 +254,12 @@ class MFAC:
         self.batch_size = batch_size
         self.learning_rate = learning_rate
 
+        # 总损失中的价值系数 
         self.value_coef = value_coef  # coefficient of value in the total loss
+        # 总损失中的熵系数
         self.ent_coef = ent_coef  # coefficient of entropy in the total loss
 
-        # init training buffers
+        # 初始化训练缓冲区
         self.view_buf = np.empty((1,) + self.view_space)
         self.feature_buf = np.empty((1,) + self.feature_space)
         self.action_buf = np.empty(1, dtype=np.int32)
@@ -268,7 +285,7 @@ class MFAC:
         return action.astype(np.int32).reshape((-1,))
 
     def _create_network(self, view_space, feature_space):
-        # input
+        # 输入
         input_view = tf.placeholder(tf.float32, (None,) + view_space)
         input_feature = tf.placeholder(tf.float32, (None,) + feature_space)
         input_act_prob = tf.placeholder(tf.float32, (None, self.num_actions))
@@ -278,7 +295,7 @@ class MFAC:
 
         hidden_size = [256]
 
-        # fully connected
+        # 全连接
         flatten_view = tf.reshape(input_view, [-1, np.prod([v.value for v in input_view.shape[1:]])])
         h_view = tf.layers.dense(flatten_view, units=hidden_size[0], activation=tf.nn.relu)
 
@@ -292,7 +309,7 @@ class MFAC:
 
         self.calc_action = tf.multinomial(tf.log(policy), 1)
 
-        # for value obtain
+        # 为了获得值
         emb_prob = tf.layers.dense(input_act_prob, units=64, activation=tf.nn.relu)
         dense_prob = tf.layers.dense(emb_prob, units=32, activation=tf.nn.relu)
         concat_layer = tf.concat([concat_layer, dense_prob], axis=1)
@@ -331,7 +348,7 @@ class MFAC:
         self.total_loss = total_loss
 
     def train(self):
-        # calc buffer size
+        # 计算缓冲区大小
         n = 0
         # batch_data = sample_buffer.episodes()
         batch_data = self.replay_buffer.episodes()

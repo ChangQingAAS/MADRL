@@ -1,0 +1,7 @@
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai 20200502\mozi_simu_inter\comm\mozi_server.py, TIME:2020-05-02 15:36:16.496381, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai 20200502\mozi_simu_inter\comm\mozi_server.py, TIME:2020-05-02 15:36:16.498374, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai 20200502\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-05-02 15:36:16.523278, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai 20200502\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-05-02 15:36:16.526270, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai 20200502\mozi_simu_inter\comm\mozi_server.py, TIME:2020-05-02 15:36:16.618605, CONTENT:sleep a second
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai 20200502\mozi_simu_inter\comm\mozi_server.py, TIME:2020-05-02 15:36:17.621158, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai 20200502\mozi_simu_inter\comm\mozi_server.py, TIME:2020-05-02 15:36:18.801057, CONTENT:scenario load sucess

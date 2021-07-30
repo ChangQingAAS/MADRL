@@ -1,0 +1,121 @@
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:54:17.423983, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:54:17.426976, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 14:54:17.429968, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 14:54:17.430965, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:54:17.436949, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:54:18.561274, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:13.546894, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:13.554847, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 14:57:13.557857, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 14:57:13.558860, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:13.565817, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:14.686052, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:21.430022, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:22.555421, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:29.301029, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:37.177708, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:45.056929, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:46.179686, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:52.929446, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:57:54.055986, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:00.804608, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:01.929668, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:08.679522, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:09.799393, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:16.086997, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:16.088991, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 14:58:16.091984, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 14:58:16.094001, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:16.099962, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:17.224364, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:24.101324, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:25.226792, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:31.975482, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:33.096993, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:39.854030, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:40.976785, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:47.724005, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:58:55.600678, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:59:03.477358, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:59:04.604760, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:59:11.344608, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:59:19.225546, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:59:20.343712, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:59:27.103063, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 14:59:28.224656, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:07.249790, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:07.251783, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:00:07.254794, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:00:07.255772, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:07.262753, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:08.386188, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:15.111292, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:16.238984, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:22.987337, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:24.109553, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:30.860916, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:31.990669, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:39.427434, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:39.430426, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:00:39.433418, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:00:39.434415, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:39.440399, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:40.562181, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:47.265517, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:55.144800, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:00:56.266614, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:03.020621, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:04.142401, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:10.891457, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:18.784168, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:19.906757, CONTENT:scenario load sucess
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:26.865040, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:27.986173, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:34.735697, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:42.611065, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:46.484606, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:01:46.487577, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:03:22.738867, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:03:22.741831, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:03:55.351154, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:03:55.354141, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:03:55.358132, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:03:55.359124, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:03:55.367083, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:03:56.495410, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:04:04.818941, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:04:04.821934, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:04:04.823929, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:04:04.824926, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:04:04.831907, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:04:05.953863, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:05:55.284163, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:05:55.287125, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:05:55.291115, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:05:55.292112, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:05:55.298096, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:05:56.417767, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:06:29.595674, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:06:29.598667, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:06:29.601658, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:06:29.602683, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:06:29.608640, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:06:30.730641, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:00.673231, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:00.676228, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:07:00.679201, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:07:00.680189, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:00.686173, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:01.806930, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:09.638888, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:17.728524, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:25.612560, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:33.590446, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:07:41.473024, CONTENT:scenario load sucess
+LEVEL:info, LINE:41, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai 20200430\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:09:04.107312, CONTENT:connecting mozi_server...
+LEVEL:info, LINE:45, FUNC:connect_grpc_server, FILE:D:\Mozi\MoziAI\moziai 20200430\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:09:04.110303, CONTENT:mozi_server is connected.
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai 20200430\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:09:04.114292, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:65, FUNC:__init__, FILE:D:\Mozi\MoziAI\moziai 20200430\mozi_ai_sdk\rlmodel\ddpg\model.py, TIME:2020-04-30 15:09:04.115289, CONTENT:torch.Size([256, 3])
+LEVEL:info, LINE:108, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai 20200430\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:09:04.122271, CONTENT:sleep a second
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai 20200430\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:09:05.245506, CONTENT:scenario load sucess
+LEVEL:info, LINE:105, FUNC:load_scenario, FILE:D:\Mozi\MoziAI\moziai 20200430\mozi_simu_inter\comm\mozi_server.py, TIME:2020-04-30 15:09:12.032321, CONTENT:scenario load sucess

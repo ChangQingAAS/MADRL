@@ -146,6 +146,7 @@ class AdvantageActorCritic(TFBaseModel):
 
         # fully connected
         flatten_view = tf.reshape(input_view, [-1, np.prod([v.value for v in input_view.shape[1:]])])
+        # h_hiddden 是hidden隐藏层的意思
         h_view = tf.layers.dense(flatten_view, units=hidden_size[0], activation=tf.nn.relu)
 
         h_emb = tf.layers.dense(input_feature,  units=hidden_size[0], activation=tf.nn.relu)

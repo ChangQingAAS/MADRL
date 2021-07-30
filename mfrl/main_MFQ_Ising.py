@@ -111,7 +111,7 @@ for i_episode in range(n_episode):
         plt.ion()
         ising_plot = np.zeros((int(np.sqrt(n_agents)), int(np.sqrt(n_agents))),
                               dtype=np.int32)
-        # 默认情况下，imshow将数据标准化为最小和最大值。 
+        # 默认情况下，imshow将数据标准化为最小和最大值。
         # 您可以使用vmin和vmax参数或norm参数来控制（如果您想要非线性缩放）
         im = plt.imshow(ising_plot,
                         cmap='gray',
@@ -124,7 +124,7 @@ for i_episode in range(n_episode):
     timestep_display = []
     done_ = 0
     current_t = 0.3
-    
+
     # 我的理解是 max_steps是batchsize
     for t in range(max_steps):
         action = np.zeros(n_agents, dtype=np.int32)

@@ -1,0 +1,78 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="5">
+<title>Vue 测试实例 - 菜鸟教程(runoob.com)</title>
+<script src="static/js/vue.min.js"></script>
+<script src="static/js/axios.min.js"></script>
+</head>
+<body>
+<div id="app" :data="info">
+	<p>场景名称: {{info.scene_name}}</p>
+	<p>平均奖励: {{info.average_reward}}</p>
+	<p>训练状态：{{info.status}}</p>
+	<p>想定名称：{{info.scenario_name}}</p>
+	<p>训练时长：{{info.study_time}}</p>
+	<p>创建日期：{{info.created}}</p>
+	<input type="submit" value="开始训练" @click="startTrain()">
+	<br/>
+	<br/>
+	<input type="submit" value="获取训练结果链接" @click="getTrainResult()">
+	<p id="link"></p>
+	
+</div>
+<script type = "text/javascript">
+new Vue({
+  el: '#app',
+  data () {
+    return {
+      info: this.getGetScene()
+    }
+  },
+  
+  methods: {
+	startTrain () {
+	  axios
+	    .get('/api/start_train?id=1')
+		.then(response => (console.log(response.data)))
+		.catch(function (error) { // 请求失败处理
+		  console.log(error);
+		});
+	  this.getGetScene()
+	},
+		
+	getTrainResult () {
+	  axios
+		.get('/api/get_train_result?id=1')
+		.then(response => (this.create(response.data.url,response.data.url)))
+		.catch(function (error) { // 请求失败处理
+		  console.log(error);
+		});
+	},
+	
+	getGetScene () {
+	  axios
+		.get('/api/get_scene?id=1')
+		.then(response => (this.info = response.data.scene))
+		.catch(function (error) { // 请求失败处理
+		  console.log(error);
+		});
+	},
+	
+	create(url,text){
+		target = document.getElementById("link")
+		var a=document.createElement("a");
+        a.href=url;
+        a.innerHTML=text;
+        a.style.color="orange";
+        target.appendChild(a);
+	}
+  },
+  
+  mounted () {
+	this.getGetScene()
+  }
+})
+</script>
+</body>
+</html>

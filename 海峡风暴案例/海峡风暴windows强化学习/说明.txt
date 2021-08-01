@@ -1,0 +1,3 @@
+运行时，直接运行mozi_ai_sdk\test\dppo\bin\evaluate.py 这个文件
+本地运行时，mozi_ai_sdk\test\dppo\envs\etc.py  修改app_mode =1, 对战平台运行时，app_mode=3
+本地运行时，需要把压缩文件中的想定复制到墨子服务端的bin目录，scenario文件夹里

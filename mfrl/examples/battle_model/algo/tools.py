@@ -61,7 +61,7 @@ class MetaBuffer(object):
         self.data[self._flag:self._flag + num] = value[start:]
         self._flag += num
         self.length = min(self.length + len(value), self.max_len)
-    
+
     # 覆盖式更新
     def reset_new(self, start, value):
         self.data[start:] = value
@@ -74,7 +74,7 @@ class EpisodesBufferEntry:
         self.features = []# 特征，不知道干啥的，和算法流程里不一样
         self.actions = []# 行动
         self.rewards = []# 奖励
-        self.probs = []# 预测？？？
+        self.probs = []# 邻居
         self.terminal = False #终止_flag
 
     def append(self, view, feature, action, reward, alive, probs=None):
@@ -82,7 +82,7 @@ class EpisodesBufferEntry:
         self.features.append(feature.copy())
         self.actions.append(action)
         self.rewards.append(reward)
-        if probs is not None:# 如果观测不为空
+        if probs is not None:
             self.probs.append(probs)
         if not alive:#如果死了，则停止运动
             self.terminal = True
@@ -108,7 +108,7 @@ class EpisodesBuffer(Buffer):
         # ？
         ids = kwargs['ids']
 
-        # 如果使用mf,则预测？？
+        # 如果使用mf,则邻居
         if self.use_mean:
             probs = kwargs['prob']
 
@@ -312,7 +312,7 @@ class SummaryObj:
         summary_dict: dict, summary value dict
         step: int, global step
         """
-        
+
         # 断言 判断数据类型
         assert isinstance(summary_dict, dict)
 
@@ -385,7 +385,7 @@ class Runner(object):
             self.sess = sess
 
             # 用来更新Q值？
-            l_vars, r_vars = self.models[0].vars, self.models[1].vars 
+            l_vars, r_vars = self.models[0].vars, self.models[1].vars
             assert len(l_vars) == len(r_vars)
             # sp_op是啥？
             self.sp_op = [tf.assign(r_vars[i], (1. - tau) * l_vars[i] + tau * r_vars[i])

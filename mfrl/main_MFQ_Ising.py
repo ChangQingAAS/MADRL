@@ -55,7 +55,7 @@ if if_plot:
 
 # 选一个动作
 def boltzman_explore(Q, temper, state, agent_index):
-    action_probs_numes = []  # 行动_概率_数量
+    action_probs_numes = []  # 行动_邻居_数量
     denom = 0  # 分母
     for i in range(n_actions):
         try:

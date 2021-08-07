@@ -14,8 +14,7 @@ from mozi_utils.geo import get_degree
 from mozi_utils.geo import get_two_point_distance
 
 from mozi_ai_sdk.env import base_env
-from . import etc_uav_anti_tank
-
+import etc_uav_anti_tank
 '''
 作者：刘占勇
 日期：2020.05.04
@@ -31,11 +30,18 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
     参数：无
     返回：无
     """
-    def __init__(self, IP, AIPort, scenario_name, simulate_compression, duration_interval, server_plat="windows"):
-        super().__init__(IP, AIPort, server_plat, scenario_name, simulate_compression, duration_interval)
+    def __init__(self,
+                 IP,
+                 AIPort,
+                 scenario_name,
+                 simulate_compression,
+                 duration_interval,
+                 server_plat="windows"):
+        super().__init__(IP, AIPort, server_plat, scenario_name,
+                         simulate_compression, duration_interval)
 
         self.SERVER_PLAT = server_plat
-        self.state_space_dim = 3    # 状态空间维度
+        self.state_space_dim = 3  # 状态空间维度: 经度，维度，朝向
         self.action_space_dim = 1
         self.action_max = 1
 
@@ -60,7 +66,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
 
         state_now = self.get_observation()
         reward_now = self.get_reward(None)
-        return state_now,reward_now
+        return state_now, reward_now
 
     '''
     作者：刘占勇
@@ -77,6 +83,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
     返回： 1）state：状态；
            2）reward：回报值
     '''
+
     def execute_action(self, action_value):
         super(EnvUavAntiTank, self).step()
 
@@ -86,14 +93,21 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         latitude = self.observation[1]
         distance = self.get_target_distance(latitude, longitude)
 
-        airs = self.redside.aircrafts
+        airs = self.redside.aircrafts  #红方的飞机
+        # for debug
+        print("airs is", airs)
         for guid in airs:
+            # for debug
+            print("guid is ", guid)
             aircraft = airs[guid]
             if distance < etc_uav_anti_tank.target_radius:
                 # 如果目标距离小于打击距离，且已发现目标，则自动攻击之 {name='坦克排(T-72型主战坦克 x 4) #4', guid='d8686a56-6e55-4b82-953e-4b9d124e5579'}
                 if self._check_is_find_target():
                     #target_guid = self._get_target_guid()
                     target_guid = self._get_contact_target_guid()
+                    # for debug
+                    print("target_guid is ", target_guid)
+                    #####
                     print("%s：自动攻击目标" % datetime.time())
                     aircraft.auto_attack_target(target_guid)
             else:
@@ -114,6 +128,10 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         obs = self.get_observation()
         reward = self.get_reward(action_value)
         done = self.check_done()
+        # for debug
+        print("obs is ", obs)
+        print("reward is ", reward)
+        print("done is ", done)
 
         return np.array(obs), reward
 
@@ -137,12 +155,18 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
             distance_reward, distance = self._get_distance_reward(action_value)
             reward += distance_reward
 
-            if distance < etc_uav_anti_tank.target_radius: # 如果进入了一个距离范围
+            if distance < etc_uav_anti_tank.target_radius:  # 如果进入了一个距离范围
+                # for debug
+                print("敌机进入攻击范围")
                 reward += 10.0
             else:
-                if not self._check_aircraft_exist():    # 飞机被打死，则降低奖赏值
+                if not self._check_aircraft_exist():  # 飞机被打死，则降低奖赏值
+                    # for debug
+                    print("自己(红色飞机）被打死")
                     reward += -100.0
-            if not self._check_target_exist(): # 目标被打死，则增加奖赏值
+            if not self._check_target_exist():  # 目标被打死，则增加奖赏值
+                # for debug
+                print("成功打击目标坦克")
                 reward += 150.0
         return reward
 
@@ -155,8 +179,10 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         latitude = obs[1]
         heading = obs[2]
         distance = self.get_target_distance(latitude, longitude)
-        action_change_heading = action_value[0].item() * 10  # 许怀阳 202005062308，由90改为20
-        reward = self.get_distance_reward(latitude, longitude, heading, action_change_heading)
+        action_change_heading = action_value[0].item(
+        ) * 10  # 许怀阳 202005062308，由90改为20
+        reward = self.get_distance_reward(latitude, longitude, heading,
+                                          action_change_heading)
         return reward, distance
 
     def _init_red_unit_list(self):
@@ -174,15 +200,22 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         获取一方的观察
         """
         obs_lt = [0.0 for x in range(0, self.state_space_dim)]
+        # for debug
+        print("obs_lt is ", obs_lt)
         for key in unit_list:
+            # for debug
+            print("key is", key)
             aircraft_list_dic = self.redside.aircrafts
+            # for debug
+            print("aircraft_list_dic is", aircraft_list_dic)
             unit = aircraft_list_dic.get(key)
+            # for debug
+            print("unit is", unit)
             if unit:
-                 obs_lt[0] = unit.dLongitude
-                 obs_lt[1] = unit.dLatitude
-                 obs_lt[2] = unit.fCurrentHeading
+                obs_lt[0] = unit.dLongitude
+                obs_lt[1] = unit.dLatitude
+                obs_lt[2] = unit.fCurrentHeading
         return obs_lt
-
 
     def _get_red_observation(self):
         """
@@ -196,7 +229,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         """
         获取航路点朝向
         """
-
         current_heading = last_heading + action_value
         if current_heading < 0:
             current_heading += 360
@@ -208,12 +240,13 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         """
         根據朝向，設置飛機的下一個路徑點
         """
-        dic = get_point_with_point_bearing_distance(lat, lon, heading, distance)
+        dic = get_point_with_point_bearing_distance(lat, lon, heading,
+                                                    distance)
         return dic
 
     def _deal_point_data(self, waypoint):
         """
-        处理航路店数据
+        处理航路点数据
         """
         lon = str(waypoint["longitude"])
         lat = str(waypoint["latitude"])
@@ -233,9 +266,11 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         obs = self.observation
         longitude = obs[0]  # 当前的位置
         latitude = obs[1]
-        heading = obs[2]    # 朝向
-        waypoint_heading = self._get_waypoint_heading(heading, action_value[0].item() * 10) # 许怀阳 20200505 2306 由90改为20
-        waypoint = self._get_new_waypoint(waypoint_heading, latitude, longitude)
+        heading = obs[2]  # 朝向
+        waypoint_heading = self._get_waypoint_heading(
+            heading, action_value[0].item() * 10)  # 许怀阳 20200505 2306 由90改为20
+        waypoint = self._get_new_waypoint(waypoint_heading, latitude,
+                                          longitude)
 
         return waypoint
 
@@ -270,45 +305,45 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
     参数：无
     返回：无
     '''
+    # for question
+    # 这里是不是有逻辑错误（无，CFacility是按一个整体算的
     def _check_target_exist(self):
         ret = self.scenario.get_units_by_name(etc_uav_anti_tank.target_name)
+        # for debug
+        print("目标的名字： ", ret)
         for key in ret:
             ret = self.scenario.unit_is_alive(key)
+            # for debug
+            print("ret is", ret)
             if not ret:
                 #pylog.info("target is not exist")
+                # for debug
+                print("target is not exist")
                 pass
             else:
                 #pylog.info("target is exist")
+                # for debug
+                print("target is exist")
                 pass
             return ret
         return False
 
-    '''
-    作者：刘占勇
-    日期：2020.05.04
-    功能：检查是否还有目标存在
-    参数：无
-    返回：无
-    '''
     def _get_target_guid(self):
         """
         获取目标guid
         """
         target_name = etc_uav_anti_tank.target_name
+        # for debug
+        print("target_name is ", target_name)
+        print("blueside.facilities is ",blueside.facilities)
         for key in self.blueside.facilities:
             pylog.info("%s" % self.blueside.facilities[key])
-            if etc_uav_anti_tank.target_name == self.blueside.facilities[key].strName:
+            if etc_uav_anti_tank.target_name == self.blueside.facilities[
+                    key].strName:
                 target_guid = key
                 return target_guid
         return target_guid
 
-    '''
-    作者：刘占勇
-    日期：2020.05.04
-    功能：检查是否还有目标存在
-    参数：无
-    返回：无
-    '''
     def _get_contact_target_guid(self):
         target_name = etc_uav_anti_tank.target_name
         if self.redside.contacts:
@@ -316,9 +351,9 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
                 pylog.info("contact guid:%s" % key)
                 dic = self.redside.contacts[key].__dict__
                 actual_guid = self.redside.contacts[key].m_ActualUnit
-                if etc_uav_anti_tank.target_name == self.blueside.facilities[actual_guid].strName:
+                if etc_uav_anti_tank.target_name == self.blueside.facilities[
+                        actual_guid].strName:
                     return key
-
 
                 #pylog.info("contact actual guid:%s" % actual_guid)
                 #for k in self.blueside.facilities:
@@ -332,7 +367,8 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
                 dic = self.redside.contacts[key].__dict__
                 actual_guid = self.redside.contacts[key].m_ActualUnit
                 for k in self.blueside.facilities:
-                    if etc_uav_anti_tank.target_name == self.blueside.facilities[k].strName:
+                    if etc_uav_anti_tank.target_name == self.blueside.facilities[
+                            k].strName:
                         target_guid = k
                         return target_guid
         return False
@@ -344,7 +380,8 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         target_name = etc_uav_anti_tank.target_name
         target_guid = self._check_is_contact_target()
         if target_guid:
-            pylog.info("find target and the guid is:%s" % target_guid)
+            pylog.info("find target and the name is:%s, the guid is:%s" %
+                       (target_name, target_guid))
             return True
 
         return False
@@ -390,8 +427,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         info = ""
         return np.array(obs), reward, done, info
 
-
-
     def get_target_point(self):
         """
         获取目标点
@@ -400,7 +435,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         lon2 = etc_uav_anti_tank.task_end_point["longitude"]
         return lat2, lon2
 
-    def get_target_distance(self,lat, lon):
+    def get_target_distance(self, lat, lon):
         """
         获取目标距离
         """

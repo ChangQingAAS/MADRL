@@ -28,7 +28,7 @@ SIMULATE_COMPRESSION = 4    #推演档位
 
 SHOW_FIGURE = True
 
-target_radius = 10000.0
+target_radius = 20000.0
 target_name = "坦克排(T-72 MBT x 4)"
 
 task_end_point = {}

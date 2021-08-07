@@ -11,6 +11,7 @@ import sys
 
 import numpy as np
 
+
 class BaseModel:
     def __init__(self, env, handle, *args, **kwargs):
         """ init
@@ -26,7 +27,7 @@ class BaseModel:
 
     def infer_action(self, raw_obs, ids, *args, **kwargs):
         """ infer action for a group of agents
-
+# !!!
         Parameters
         ----------
         raw_obs: tuple
@@ -40,7 +41,7 @@ class BaseModel:
         args:
             additional custom args
         kwargs:
-            additional custom args
+            additional custom args 额外的自定义参数
         """
         pass
 
@@ -56,7 +57,7 @@ class BaseModel:
         -------
         loss and estimated mean state value
         """
-        return 0, 0    # loss, mean value
+        return 0, 0  # loss, mean value
 
     def save(self, *args, **kwargs):
         """ save the model """
@@ -84,10 +85,10 @@ class NDArrayPackage:
 
         def send_thread():
             for x in self.data:
-                if np.prod(x.shape)  > self.max_len:
+                if np.prod(x.shape) > self.max_len:
                     seg = int(self.max_len // np.prod(x.shape[1:]))
                     for pt in range(0, len(x), seg):
-                        conn.send_bytes(x[pt:pt+seg])
+                        conn.send_bytes(x[pt:pt + seg])
                 else:
                     conn.send_bytes(x)
 
@@ -99,15 +100,15 @@ class NDArrayPackage:
     def recv_from(self, conn):
         bufs = []
         for info in self.info:
-            buf = np.empty(shape=(int(np.prod(info[0])),), dtype=info[1])
+            buf = np.empty(shape=(int(np.prod(info[0])), ), dtype=info[1])
 
             item_size = int(np.prod(info[0][1:]))
             if np.prod(info[0]) > self.max_len:
                 seg = int(self.max_len // item_size)
                 for pt in range(0, int(np.prod(info[0])), seg * item_size):
-                    conn.recv_bytes_into(buf[pt:pt+seg * item_size])
+                    conn.recv_bytes_into(buf[pt:pt + seg * item_size])
             else:
-               conn.recv_bytes_into(buf)
+                conn.recv_bytes_into(buf)
             bufs.append(buf.reshape(info[0]))
         return bufs
 
@@ -117,8 +118,14 @@ class ProcessingModel(BaseModel):
     start a sub-processing to host a model,
     use pipe or socket for communication
     """
-    def __init__(self, env, handle, name, port, sample_buffer_capacity=1000,
-                 RLModel=None, **kwargs):
+    def __init__(self,
+                 env,
+                 handle,
+                 name,
+                 port,
+                 sample_buffer_capacity=1000,
+                 RLModel=None,
+                 **kwargs):
         """
         Parameters
         ----------
@@ -292,7 +299,8 @@ def model_client(addr, sample_buffer_capacity, RLModel, model_args):
     import magent.utility
 
     model = RLModel(**model_args)
-    sample_buffer = magent.utility.EpisodesBuffer(capacity=sample_buffer_capacity)
+    sample_buffer = magent.utility.EpisodesBuffer(
+        capacity=sample_buffer_capacity)
 
     conn = multiprocessing.connection.Client(addr)
 
@@ -312,8 +320,10 @@ def model_client(addr, sample_buffer_capacity, RLModel, model_args):
             package.send_to(conn)
         elif cmd[0] == 'train':
             print_every = cmd[1]
-            total_loss, value = model.train(sample_buffer, print_every=print_every)
-            sample_buffer = magent.utility.EpisodesBuffer(sample_buffer_capacity)
+            total_loss, value = model.train(sample_buffer,
+                                            print_every=print_every)
+            sample_buffer = magent.utility.EpisodesBuffer(
+                sample_buffer_capacity)
             conn.send((total_loss, value))
         elif cmd[0] == 'sample':
             array_info = cmd[1]

@@ -25,6 +25,11 @@ def read_start_epoch(epoch_file_path):
     return int(start_epoch)
 
 def read_start_epoch_file(epoch_file_path):
+    # for debug
+    # print("epoch_file_path is ",epoch_file_path)
+    # epoch_file_path.replace('\/', '\\\\')
+    #for debug
+    # print("epoch_file_path is ",epoch_file_path)
     f = open(epoch_file_path, "r")
     ret = f.read()
     f.close()

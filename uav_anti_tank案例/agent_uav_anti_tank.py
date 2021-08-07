@@ -12,16 +12,15 @@
 from mozi_ai_sdk.agents import base_agent
 from mozi_ai_sdk.rlmodel.ddpg import train
 from mozi_ai_sdk.rlmodel.ddpg import buffer
-from . import etc_uav_anti_tank as etc
+import etc_uav_anti_tank as etc
 import numpy as np
-from .pic import write_loss
+from pic import write_loss
 
 
 class AgentUavAntiTank(base_agent.BaseAgent):
     """
     无人机攻击坦克案例的智能体
     """
-
     def __init__(self, env, start_epoch=0):
         super(AgentUavAntiTank, self).__init__()
         '''创建训练器'''
@@ -29,7 +28,7 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         self.episodes = start_epoch
         self.ram = buffer.MemoryBuffer(etc.MAX_BUFFER)  # 算法缓存大小
         self.trainer = train.Trainer(
-            env.state_space_dim,  # 状态空间维度
+            env.state_space_dim,  # 状态空间维度 
             env.action_space_dim,  # 动作空间维度
             env.action_max,  # ？？？？？
             self.ram,
@@ -69,11 +68,19 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         super(AgentUavAntiTank, self).step(state_now)
         state = np.float32(state_now)  # 强制转化为浮点类型
 
-        # 4/5的动作随机生成，1/5的动作由模型生成
+        # # 4/5的动作随机生成，1/5的动作由模型生成
+        # if self.episodes % 5 == 0:
+        #     action = self.trainer.get_exploitation_action(state)  # 通过模型来生成动作，利用，
+        # else:
+        #     action = self.trainer.get_exploration_action(state)  # 随机生成动作。
+
+        # for debug
+        # 1/5的动作随机生成，4/5的动作由模型生成
         if self.episodes % 5 == 0:
-            action = self.trainer.get_exploitation_action(state)  # 通过模型来生成动作，利用，
+            action = self.trainer.get_exploration_action(state)  # 通过模型来生成动作，利用，
         else:
-            action = self.trainer.get_exploration_action(state)  # 随机生成动作。
+            action = self.trainer.get_exploitation_action(state)  # 随机生成动作。
+
 
         # “环境”的推进函数，其中包括让墨子服务器推进
         # new_observation, reward, done, info = self.env.step(action)

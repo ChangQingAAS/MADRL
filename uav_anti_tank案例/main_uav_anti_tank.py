@@ -26,10 +26,11 @@ from mozi_utils.pyfile import write_start_epoch_file
 # 墨子AI SDK
 from mozi_ai_sdk.rlmodel.ddpg import train
 from mozi_ai_sdk.rlmodel.ddpg import buffer
-from mozi_ai_sdk.examples.uav_anti_tank.env_uav_anti_tank import EnvUavAntiTank as Environment
-from mozi_ai_sdk.examples.uav_anti_tank import etc_uav_anti_tank as etc
-from mozi_ai_sdk.examples.uav_anti_tank.agent_uav_anti_tank import AgentUavAntiTank
-from mozi_ai_sdk.examples.uav_anti_tank.pic import show_pic
+
+from env_uav_anti_tank import EnvUavAntiTank as Environment
+import etc_uav_anti_tank as etc
+from agent_uav_anti_tank import AgentUavAntiTank
+from pic import show_pic
 #  设置墨子安装目录下bin目录为MOZIPATH，程序会自动启动墨子
 # os.environ['MOZIPATH'] = 'D:\\MoZiSystem\\Mozi\\MoziServer\\bin'
 
@@ -86,6 +87,7 @@ def main():
                 reward_now = reward_new
 
                 # 打印提示
+                print("")
                 print("%s：轮数:%s 决策步数:%s  Reward:%.2f" %
                       (datetime.datetime.now(), _ep, step, reward_now))
 

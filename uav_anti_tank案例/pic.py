@@ -12,7 +12,7 @@
 import matplotlib.pyplot as plt
 
 import numpy as np
-from . import etc_uav_anti_tank as etc
+import etc_uav_anti_tank as etc
 
 import os
 from mozi_utils import pyfile

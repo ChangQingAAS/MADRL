@@ -28,7 +28,7 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         self.episodes = start_epoch
         self.ram = buffer.MemoryBuffer(etc.MAX_BUFFER)  # 算法缓存大小
         self.trainer = train.Trainer(
-            env.state_space_dim,  # 状态空间维度 
+            env.state_space_dim,  # 状态空间维度
             env.action_space_dim,  # 动作空间维度
             env.action_max,  # ？？？？？
             self.ram,

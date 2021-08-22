@@ -13,7 +13,6 @@ class AgentUavAntiTank(base_agent.BaseAgent):
     def __init__(self, env, start_epoch=0):
         super(AgentUavAntiTank, self).__init__()
         '''创建训练器'''
-
         self.episodes = start_epoch
         self.ram = buffer.MemoryBuffer(etc.MAX_BUFFER)  # 缓存区大小
         self.trainer = train.Trainer(
@@ -61,13 +60,6 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         super(AgentUavAntiTank, self).step(state_now)
         state = np.float32(state_now)  # 强制转化为浮点类型
 
-        # # 4/5的动作随机生成，1/5的动作由模型生成
-        # if self.episodes % 5 == 0:
-        #     action = self.trainer.get_exploitation_action(state)  # 通过模型来生成动作，利用，
-        # else:
-        #     action = self.trainer.get_exploration_action(state)  # 随机生成动作。
-
-        # for debug
         # 1/5的动作随机生成，4/5的动作由模型生成
         if self.episodes % 5 == 0:
             action = self.trainer.get_exploration_action(
@@ -95,12 +87,8 @@ class AgentUavAntiTank(base_agent.BaseAgent):
     def train(self, state_last, action_last, reward_now, state_new, cur_step):
         """
         功能说明：根据动作执行结果，训练一次智能体
-        作者：许怀阳
-        时间：2020.05.05 17:20
-        执行流程：
         参数：state_now:当前状态空间 reward_now:当前的回报值
         """
-
         # 添加最新经验，并优化训练一把，再做决策
         self.ram.add(state_last, action_last, reward_now, state_new)
         self.trainer.optimize(cur_step)

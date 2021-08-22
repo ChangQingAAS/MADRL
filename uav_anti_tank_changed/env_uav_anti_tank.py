@@ -30,7 +30,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
                          simulate_compression, duration_interval)
 
         self.SERVER_PLAT = server_plat
-        self.state_space_dim = 3  # 状态空间维度: 经度，维度，朝向
+        self.state_space_dim = 12  # 状态空间维度: 经度，维度，朝向
         self.action_space_dim = 1  # 改变朝向
         self.action_max = 1
 
@@ -44,7 +44,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         重置
         返回：当前状体及回报值
         """
-
         # 调用父类的重置函数
         super(EnvUavAntiTank, self).reset(etc_uav_anti_tank.app_mode)
 
@@ -75,18 +74,16 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         # 根据动作计算飞机的期望路径点
         waypoint = self._get_aircraft_waypoint(action_value)
         # 当前的位置
-        longitude = self.observation[0]
-        latitude = self.observation[1]
-
-        distance = self.get_target_distance(latitude, longitude)
+        # longitude = self.observation[0]
+        # latitude = self.observation[1]
 
         # 红方的飞机
         airs = self.redside.aircrafts
         # for debug
-        print("airs is", airs)
+        # print("airs is", airs)
         for guid in airs:
             # for debug
-            print("guid is ", guid)
+            # print("guid is ", guid)
             aircraft = airs[guid]
             # todo 改成设计的奖励函数
             lon, lat = self._deal_point_data(waypoint)
@@ -102,34 +99,38 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         # # 动作执行完了，该继续仿真了
         # self.mozi_server.run_simulate()
 
-        # 取消注释
-        self.mozi_server.run_simulate()
-
         obs = self.get_observation()
         reward = self.get_reward(action_value)
-        done = self.check_done()
+        done = self.check_done(action_value)
         # for debug
-        print("obs is ", obs)
-        print("reward is ", reward)
-        print("done is ", done)
+        # print("obs is ", obs)
+        # print("reward is ", reward)
+        print("[after check_done()] done is ", done)
 
         return np.array(obs), reward
 
-    def check_done(self):
+    def check_done(self,action_value):
         """
         检查是否可以结束
         如果到达目标地点附近则结束
         """
-        # 根据动作计算飞机的期望路径点
         waypoint = self._get_aircraft_waypoint(action_value)
         lon, lat = self._deal_point_data(waypoint)
-        lat_flag = (lat < task_end_point["latitude"] + 0.01) or (
-            lat > task_end_point["latitude"] - 0.01)
-        lon_flag = (lon < task_end_point["longitude"] + 0.01) or (
-            lon > task_end_point["longitude"] - 0.01)
+        target_lon, target_lat = self.get_target_point()
+        lat_flag = (lat < (float(target_lat) + 0.1)) and (lat > (float(target_lat) - 0.1))
+        lon_flag = (lon < (float(target_lon) + 0.1)) and (lon > (float(target_lon) - 0.1))
+
+        exit_flag = (abs(float(target_lat) - lat) > 0.5) or (abs(float(target_lon) - lon) > 0.5)
 
         if lon_flag and lat_flag:
+            print("UAVs are in traget area now !")
+            print("\n",lon,lat)
             return True
+
+        if exit_flag:
+            print("UAV are out of possible target area! ")
+            return True
+
         return False
 
     def get_reward(self, action_value):
@@ -168,15 +169,16 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         distance = get_two_point_distance(lon, lat, target_lon, target_lat)
         task_heading = get_degree(lat, lon, target_lat, target_lon)
         current_heading = last_heading + heading_change
-        return self.get_reward_value(task_heading, current_heading, abs(distance))
-    
+        return self.get_reward_value(task_heading, current_heading,
+                                     distance)
+
     def get_reward_value(self, task_heading, current_heading, distance):
         """
         由于不好确定agent和目标的距离，在这里使用的reward没有涉及到每次移动距离R
         todo: 辅助reward
             question: 怎么找到障碍物的位置
         """
-        reward = -distance
+        reward = - abs(distance) / 10000.0
         return reward
 
     def _init_red_unit_list(self):
@@ -194,21 +196,20 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         获取一方的观察
         """
         obs_lt = [0.0 for x in range(0, self.state_space_dim)]
-        # for debug
-        print("obs_lt is ", obs_lt)
+        count = 0
         for key in unit_list:
-            # for debug
-            print("key is", key)
             aircraft_list_dic = self.redside.aircrafts
             # for debug
-            print("aircraft_list_dic is", aircraft_list_dic)
+            # print("aircraft_list_dic is", aircraft_list_dic)
             unit = aircraft_list_dic.get(key)
             # for debug
-            print("unit is", unit)
+            # print("\nunit is", unit)
+            print("")
             if unit:
-                obs_lt[0] = unit.dLongitude
-                obs_lt[1] = unit.dLatitude
-                obs_lt[2] = unit.fCurrentHeading
+                obs_lt[count * 3 + 0] = unit.dLongitude
+                obs_lt[count * 3 + 1] = unit.dLatitude
+                obs_lt[count * 3 + 2] = unit.fCurrentHeading
+                count += 1
         return obs_lt
 
     def _get_red_observation(self):
@@ -240,10 +241,11 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
 
     def _deal_point_data(self, waypoint):
         """
-        处理航路点数据
+        处理航路点数据：把waypoint 字典里的参数转成str类型
+        不知道为什么要转类型，应该按浮点数算更好吧
         """
-        lon = str(waypoint["longitude"])
-        lat = str(waypoint["latitude"])
+        lon = float(waypoint["longitude"])
+        lat = float(waypoint["latitude"])
         return lon, lat
 
     def _get_aircraft_waypoint(self, action_value):
@@ -251,9 +253,12 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         根据智能体的动作指令，获取飞机的期望的航路点
         """
         obs = self.observation
-        longitude = obs[0]  # 当前的位置
+        # 当前的位置
+        longitude = obs[0]
         latitude = obs[1]
-        heading = obs[2]  # 朝向
+        # 朝向
+        heading = obs[2]
+        # 航路点朝向角改变幅度，这里有一个超参，现设置为5
         waypoint_heading = self._get_waypoint_heading(
             heading, action_value[0].item() * 5)
         waypoint = self._get_new_waypoint(waypoint_heading, latitude,
@@ -261,53 +266,35 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
 
         return waypoint
 
-    def check_done(self):
-        """
-        检查是否可以结束
-        """
-        if not self._check_aircraft_exist():
-            return True
-        if not self._check_target_exist():
-            return True
-        return False
+    # def _check_aircraft_exist(self):
+    #     obs = self.observation
+    #     for i in range(len(obs)):
+    #         if obs[i] != 0.0:
+    #             return True
+    #     return False
 
-    '''
-    功能：检查飞机是否存在，用于判断是否结束推演，如果飞机没有了，就不用再推演了
-    '''
-
-    def _check_aircraft_exist(self):
-        obs = self.observation
-        for i in range(len(obs)):
-            if obs[i] != 0.0:
-                return True
-        return False
-
-    '''
-    功能：检查是否还有目标存在
-    '''
-
-    # for question
-    # 这里是不是有逻辑错误（无，CFacility是按一个整体算的
-    def _check_target_exist(self):
-        ret = self.scenario.get_units_by_name(etc_uav_anti_tank.target_name)
-        # for debug
-        print("目标的名字： ", ret)
-        for key in ret:
-            ret = self.scenario.unit_is_alive(key)
-            # for debug
-            print("ret is", ret)
-            if not ret:
-                #pylog.info("target is not exist")
-                # for debug
-                print("target is not exist")
-                pass
-            else:
-                #pylog.info("target is exist")
-                # for debug
-                print("target is exist")
-                pass
-            return ret
-        return False
+    # # for question
+    # # 这里是不是有逻辑错误（无，CFacility是按一个整体算的
+    # def _check_target_exist(self):
+    #     ret = self.scenario.get_units_by_name(etc_uav_anti_tank.target_name)
+    #     # for debug
+    #     print("目标的名字： ", ret)
+    #     for key in ret:
+    #         ret = self.scenario.unit_is_alive(key)
+    #         # for debug
+    #         print("ret is", ret)
+    #         if not ret:
+    #             #pylog.info("target is not exist")
+    #             # for debug
+    #             print("target is not exist")
+    #             pass
+    #         else:
+    #             #pylog.info("target is exist")
+    #             # for debug
+    #             print("target is exist")
+    #             pass
+    #         return ret
+    #     return False
 
     def _get_target_guid(self):
         """
@@ -395,16 +382,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         """
         self.red_unit_list = self._init_red_unit_list()
 
-    def _get_timesteps(self, action):
-        """
-        获取单步数据
-        """
-        obs = self.get_observation()
-        reward = self.get_reward(action)
-        done = self.check_done()
-        info = ""
-        return np.array(obs), reward, done, info
-
     def get_target_point(self):
         """
         获取目标点
@@ -420,7 +397,3 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         lat2, lon2 = self.get_target_point()
         distance = get_two_point_distance(lon, lat, lon2, lat2)
         return distance
-
-    
-
-    

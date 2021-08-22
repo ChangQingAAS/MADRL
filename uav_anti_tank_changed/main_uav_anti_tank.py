@@ -80,7 +80,7 @@ def main():
                       (datetime.datetime.now(), _ep, step, reward_now))
 
                 # 检查是否结束本轮推演
-                if env.check_done():
+                if env.check_done(action_new):
                     break
                 # 如果显示此图，代码会卡住
                 if cur_step % 100 == 0:
@@ -89,6 +89,5 @@ def main():
 
     except KeyboardInterrupt:
         pass
-
 
 main()

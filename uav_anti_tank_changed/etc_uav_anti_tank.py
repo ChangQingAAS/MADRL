@@ -9,7 +9,7 @@ device = torch.device("cuda" if USE_CUDA else "cpu")
 SERVER_IP = "127.0.0.1"  # 仿真服务器IP地址
 SERVER_PORT = "6060"  # 仿真服务器端口号
 SERVER_PLAT = "windows"  # windows linux
-SCENARIO_NAME = "uav_anti_tank.scen"  # 想定名称
+SCENARIO_NAME = "uav_anti_tank_changed.scen"  # 想定名称
 SIMULATE_COMPRESSION = 4  #推演档位:即推演速度
 #SYNCHRONOUS = True # True同步, False异步 # todo: 测试这个参数是什么
 
@@ -20,8 +20,8 @@ target_radius = 100.0
 target_name = "坦克排(T-72 MBT x 4)"
 
 task_end_point = {}
-task_end_point["latitude"] = 33.36107  #这个应该是根据起点和障碍位置定的
-task_end_point["longitude"] = 44.37778
+task_end_point["latitude"] = 44.44 #这个应该是根据起点和障碍位置定的
+task_end_point["longitude"] = 33.33
 
 # todo: 这几个mode也要试一下
 # app_mode:

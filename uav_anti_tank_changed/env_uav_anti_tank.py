@@ -1,13 +1,8 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import datetime
 import random
 import numpy as np
-
 from math import cos
 from math import radians
-
 from mozi_utils import pylog
 from mozi_utils.geo import get_point_with_point_bearing_distance
 from mozi_utils.geo import get_degree
@@ -16,19 +11,13 @@ from mozi_utils.geo import get_two_point_distance
 from mozi_ai_sdk.env import base_env
 import etc_uav_anti_tank
 '''
-作者：刘占勇
-日期：2020.05.04
 功能：无人机反坦克想定环境类，UAT=UAV Anti Tank
 '''
 
 
 class EnvUavAntiTank(base_env.BaseEnvironment):
     """
-    作者：刘占勇
-    日期：2020.05.04
     功能：构造函数
-    参数：无
-    返回：无
     """
     def __init__(self,
                  IP,
@@ -68,8 +57,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         return state_now, reward_now
 
     '''
-    作者：刘占勇
-    日期：2020.05.04
     功能：环境的执行动作函数
     流程：
         输入动作
@@ -78,7 +65,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         获取观察
         获取reward
         检查是否结束
-    参数：无
     返回： 1）state：状态；
            2）reward：回报值
     '''
@@ -86,37 +72,28 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
     def execute_action(self, action_value):
         super(EnvUavAntiTank, self).step()
 
-        waypoint = self._get_aircraft_waypoint(action_value)  # 根据动作计算飞机的期望路径点
-
-        longitude = self.observation[0]  # 当前的位置
+        # 根据动作计算飞机的期望路径点
+        waypoint = self._get_aircraft_waypoint(action_value)
+        # 当前的位置
+        longitude = self.observation[0]
         latitude = self.observation[1]
+
         distance = self.get_target_distance(latitude, longitude)
 
-        airs = self.redside.aircrafts  #红方的飞机
+        # 红方的飞机
+        airs = self.redside.aircrafts
         # for debug
         print("airs is", airs)
         for guid in airs:
             # for debug
             print("guid is ", guid)
             aircraft = airs[guid]
-            ## todo 改成设计的奖励函数
-            if distance < etc_uav_anti_tank.target_radius:
-                # 如果目标距离小于打击距离，且已发现目标，则自动攻击之 {name='坦克排(T-72型主战坦克 x 4) #4', guid='d8686a56-6e55-4b82-953e-4b9d124e5579'}
-                if self._check_is_find_target():
-                    #target_guid = self._get_target_guid()
-                    target_guid = self._get_contact_target_guid()
-                    # for debug
-                    print("target_guid is ", target_guid)
-                    #####
-                    print("%s：自动攻击目标" % datetime.time())
-                    aircraft.auto_attack_target(target_guid)
-            else:
-                # 如果目标距离大于打击距离，则继续机动
-                lon, lat = self._deal_point_data(waypoint)
-                #print("set waypoint:%s %s" % (lon, lat))
-                aircraft.set_waypoint(lon, lat)
+            # todo 改成设计的奖励函数
+            lon, lat = self._deal_point_data(waypoint)
+            #print("set waypoint:%s %s" % (lon, lat))
+            aircraft.set_waypoint(lon, lat)
 
-        # 动作下达了，该仿真程序运行，以便执行指令（），许怀阳 2020050716:58
+        # 动作下达了，该仿真程序运行，以便执行指令
         self.mozi_server.run_grpc_simulate()
 
         # 更新数据时，会被阻塞，实现与仿真的同步
@@ -126,7 +103,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         # self.mozi_server.run_simulate()
 
         # 取消注释
-        # 动作执行完了，该继续仿真了
         self.mozi_server.run_simulate()
 
         obs = self.get_observation()
@@ -142,10 +118,17 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
     def check_done(self):
         """
         检查是否可以结束
+        如果到达目标地点附近则结束
         """
-        if not self._check_aircraft_exist():
-            return True
-        if not self._check_target_exist():
+        # 根据动作计算飞机的期望路径点
+        waypoint = self._get_aircraft_waypoint(action_value)
+        lon, lat = self._deal_point_data(waypoint)
+        lat_flag = (lat < task_end_point["latitude"] + 0.01) or (
+            lat > task_end_point["latitude"] - 0.01)
+        lon_flag = (lon < task_end_point["longitude"] + 0.01) or (
+            lon > task_end_point["longitude"] - 0.01)
+
+        if lon_flag and lat_flag:
             return True
         return False
 
@@ -159,20 +142,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
             # 距离目标越近，奖励值越大
             distance_reward, distance = self._get_distance_reward(action_value)
             reward += distance_reward
-
-            if distance < etc_uav_anti_tank.target_radius:  # 如果进入了一个距离范围
-                # for debug
-                print("敌机进入攻击范围")
-                reward += 10.0
-            else:
-                if not self._check_aircraft_exist():  # 飞机被打死，则降低奖赏值
-                    # for debug
-                    print("自己(红色飞机）被打死")
-                    reward += -100.0
-            if not self._check_target_exist():  # 目标被打死，则增加奖赏值
-                # for debug
-                print("成功打击目标坦克")
-                reward += 150.0
         return reward
 
     def _get_distance_reward(self, action_value):
@@ -183,12 +152,32 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         longitude = obs[0]
         latitude = obs[1]
         heading = obs[2]
+
         distance = self.get_target_distance(latitude, longitude)
-        action_change_heading = action_value[0].item(
-        ) * 10  # 许怀阳 202005062308，由90改为20
+        # 朝向角改变幅度，这里有一个超参
+        action_change_heading = action_value[0].item() * 5
         reward = self.get_distance_reward(latitude, longitude, heading,
                                           action_change_heading)
         return reward, distance
+
+    def get_distance_reward(self, lat, lon, last_heading, heading_change):
+        """
+        获取距离奖励值
+        """
+        target_lat, target_lon = self.get_target_point()
+        distance = get_two_point_distance(lon, lat, target_lon, target_lat)
+        task_heading = get_degree(lat, lon, target_lat, target_lon)
+        current_heading = last_heading + heading_change
+        return self.get_reward_value(task_heading, current_heading, abs(distance))
+    
+    def get_reward_value(self, task_heading, current_heading, distance):
+        """
+        由于不好确定agent和目标的距离，在这里使用的reward没有涉及到每次移动距离R
+        todo: 辅助reward
+            question: 怎么找到障碍物的位置
+        """
+        reward = -distance
+        return reward
 
     def _init_red_unit_list(self):
         """
@@ -243,7 +232,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
 
     def _get_new_waypoint(self, heading, lat, lon, distance=20.0):
         """
-        根據朝向，設置飛機的下一個路徑點
+        根据朝向，设置飞机的下一个路径点
         """
         dic = get_point_with_point_bearing_distance(lat, lon, heading,
                                                     distance)
@@ -257,14 +246,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         lat = str(waypoint["latitude"])
         return lon, lat
 
-    '''
-    作者：刘占勇
-    日期：2020.05.04
-    功能：检查飞机是否存在，用于判断是否结束推演，如果飞机没有了，就不用再推演了
-    参数：无
-    返回：无
-    '''
-
     def _get_aircraft_waypoint(self, action_value):
         """
         根据智能体的动作指令，获取飞机的期望的航路点
@@ -274,7 +255,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         latitude = obs[1]
         heading = obs[2]  # 朝向
         waypoint_heading = self._get_waypoint_heading(
-            heading, action_value[0].item() * 10)  # 许怀阳 20200505 2306 由90改为20
+            heading, action_value[0].item() * 5)
         waypoint = self._get_new_waypoint(waypoint_heading, latitude,
                                           longitude)
 
@@ -291,11 +272,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         return False
 
     '''
-    作者：刘占勇
-    日期：2020.05.04
     功能：检查飞机是否存在，用于判断是否结束推演，如果飞机没有了，就不用再推演了
-    参数：无
-    返回：无
     '''
 
     def _check_aircraft_exist(self):
@@ -306,11 +283,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         return False
 
     '''
-    作者：刘占勇
-    日期：2020.05.04
     功能：检查是否还有目标存在
-    参数：无
-    返回：无
     '''
 
     # for question
@@ -395,9 +368,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         return False
 
     def _update(self):
-        """
-        更新
-        """
         self.mozi_server.update_situation(self.scenario)
         self.redside.static_update()
         self.blueside.static_update()
@@ -451,25 +421,6 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         distance = get_two_point_distance(lon, lat, lon2, lat2)
         return distance
 
-    def get_reward_value(self, task_heading, current_heading, distance):
-        """
-        获取奖励值
-        """
-        angel = abs(task_heading - current_heading)
-        cos_value = cos(radians(angel))
-        if cos_value >= 0:
-            reward = (10000 * cos(radians(angel))) / distance
-            return reward
-        else:
-            neg_reward = (distance * cos(radians(angel))) / 10000
-            return neg_reward
+    
 
-    def get_distance_reward(self, lat, lon, last_heading, heading_change):
-        """
-        获取距离奖励值
-        """
-        lat2, lon2 = self.get_target_point()
-        distance = get_two_point_distance(lon, lat, lon2, lat2)
-        task_heading = get_degree(lat, lon, lat2, lon2)
-        current_heading = last_heading + heading_change
-        return self.get_reward_value(task_heading, current_heading, distance)
+    

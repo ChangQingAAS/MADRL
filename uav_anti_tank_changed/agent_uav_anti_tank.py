@@ -1,14 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-#####################################
-# File name : agent_uav_anti_tank.py
-# Create date : 2020-03-23 00:56
-# Modified date : 2020-05-06 14:37
-# Author : DARREN
-# Describe : not set
-# Email : lzygzh@126.com
-#####################################
-
 from mozi_ai_sdk.agents import base_agent
 from mozi_ai_sdk.rlmodel.ddpg import train
 from mozi_ai_sdk.rlmodel.ddpg import buffer
@@ -26,14 +15,17 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         '''创建训练器'''
 
         self.episodes = start_epoch
-        self.ram = buffer.MemoryBuffer(etc.MAX_BUFFER)  # 算法缓存大小
+        self.ram = buffer.MemoryBuffer(etc.MAX_BUFFER)  # 缓存区大小
         self.trainer = train.Trainer(
-            env.state_space_dim,  #状态空间维度: 经度，维度，朝向
-            env.action_space_dim,  # 动作空间维度
-            env.action_max,  # ？？？？？
+            env.state_space_dim,  # 状态空间维度: 经度，维度，朝向
+            # 这个参量在这里只有定义没有使用，是为了传给ddpg的trainer加OU噪声，防止过拟合
+            env.action_space_dim,
+            # 在ddpg里的actor，由动作空间大小算出来的OU噪声乘以action_max(在实际应用中，是为了对action进行缩放)
+            env.action_max,
             self.ram,
-            etc.device,  # CPU or GPU
-            # None,
+            # CPU or GPU
+            etc.device,
+            # None, 把loss写入文件的函数
             write_loss,
             int(start_epoch),
             etc.MODELS_PATH)
@@ -48,7 +40,9 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         """
         重置
         """
-        self.trainer.save_model(self.episodes, etc.MODELS_PATH)  # 保存一下已经训练的轮数
+        # 保存一下已经训练的轮数
+        self.trainer.save_model(self.episodes, etc.MODELS_PATH)  
+        # 回合数++
         self.episodes += 1
 
     def setup(self, state_space, action_space):
@@ -62,8 +56,7 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         """
         功能说明：智能体的决策函数，该函数根据从环境所得的状态及回报值来决定下一步该执行什么动作。
         执行流程：训练器生成动作
-        参数：state_now:当前状态空间
-           reward_now:当前的回报值
+        参数：state_now:当前状态空间 reward_now:当前的回报值
         """
         super(AgentUavAntiTank, self).step(state_now)
         state = np.float32(state_now)  # 强制转化为浮点类型
@@ -105,8 +98,7 @@ class AgentUavAntiTank(base_agent.BaseAgent):
         作者：许怀阳
         时间：2020.05.05 17:20
         执行流程：
-        参数：state_now:当前状态空间；
-              reward_now:当前的回报值
+        参数：state_now:当前状态空间 reward_now:当前的回报值
         """
 
         # 添加最新经验，并优化训练一把，再做决策

@@ -152,8 +152,8 @@ def show_loss_pic(loss_name="loss_critic"):
     # 使用plt.show(),然后使用plt.close()并不会关闭图，
     # plt.show()
     plt.draw()
-    plt.pause(3)
-    plt.close()
+    plt.pause(20)
+    # plt.close()
 
 
 def show_pic():

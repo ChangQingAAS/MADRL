@@ -7,12 +7,8 @@ from mozi_utils import pylog
 from mozi_utils.geo import get_point_with_point_bearing_distance
 from mozi_utils.geo import get_degree
 from mozi_utils.geo import get_two_point_distance
-
 from mozi_ai_sdk.env import base_env
 import etc_uav_anti_tank
-'''
-功能：无人机反坦克想定环境类，UAT=UAV Anti Tank
-'''
 
 
 class EnvUavAntiTank(base_env.BaseEnvironment):
@@ -109,7 +105,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
 
         return np.array(obs), reward
 
-    def check_done(self,action_value):
+    def check_done(self, action_value):
         """
         检查是否可以结束
         如果到达目标地点附近则结束
@@ -117,14 +113,19 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         waypoint = self._get_aircraft_waypoint(action_value)
         lon, lat = self._deal_point_data(waypoint)
         target_lon, target_lat = self.get_target_point()
-        lat_flag = (lat < (float(target_lat) + 0.1)) and (lat > (float(target_lat) - 0.1))
-        lon_flag = (lon < (float(target_lon) + 0.1)) and (lon > (float(target_lon) - 0.1))
+        lat_flag = (lat <
+                    (float(target_lat) + 0.1)) and (lat >
+                                                    (float(target_lat) - 0.1))
+        lon_flag = (lon <
+                    (float(target_lon) + 0.1)) and (lon >
+                                                    (float(target_lon) - 0.1))
 
-        exit_flag = (abs(float(target_lat) - lat) > 0.5) or (abs(float(target_lon) - lon) > 0.5)
+        exit_flag = (abs(float(target_lat) - lat) >
+                     0.5) or (abs(float(target_lon) - lon) > 0.5)
 
         if lon_flag and lat_flag:
             print("UAVs are in traget area now !")
-            print("\n",lon,lat)
+            print("\n", lon, lat)
             return True
 
         if exit_flag:
@@ -169,16 +170,40 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         distance = get_two_point_distance(lon, lat, target_lon, target_lat)
         task_heading = get_degree(lat, lon, target_lat, target_lon)
         current_heading = last_heading + heading_change
-        return self.get_reward_value(task_heading, current_heading,
-                                     distance)
+        return self.get_reward_value(lat,lon,task_heading, current_heading, distance)
 
-    def get_reward_value(self, task_heading, current_heading, distance):
+    def get_reward_value(self,lat,lon, task_heading, current_heading, distance):
         """
         由于不好确定agent和目标的距离，在这里使用的reward没有涉及到每次移动距离R
-        todo: 辅助reward
-            question: 怎么找到障碍物的位置
         """
-        reward = - abs(distance) / 10000.0
+        # todo:
+        #   后续还要考虑怎么把自己agent的奖惩拆开
+        #   现在好像是在一起的样子
+        main_reward = -abs(distance) / 10000.0
+
+        aide_reward = 0
+
+        # 拿到障碍方的列表
+        unit_list = []
+        facilities_list_dic = self.blueside.facilities
+        for key in facilities_list_dic:
+            unit_list.append(key)
+
+        # 循环每个障碍体，求和辅助reward
+        for key in unit_list:
+            facilities_list_dic = self.blueside.facilities
+            unit = facilities_list_dic.get(key)
+            # for debug
+            print("\nunit is", unit)
+            print("\nunit.dLongitude is ", unit.dLongitude)
+            print("")
+            if unit:
+                obstacle_lon = unit.dLongitude
+                obstacle_lat = unit.dLatitude
+                distance = get_two_point_distance(lon, lat, obstacle_lon, obstacle_lat)
+                aide_reward += abs(distance) / 40000.0
+
+        reward = main_reward + aide_reward
         return reward
 
     def _init_red_unit_list(self):
@@ -296,37 +321,37 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
     #         return ret
     #     return False
 
-    def _get_target_guid(self):
-        """
-        获取目标guid
-        """
-        target_name = etc_uav_anti_tank.target_name
-        # for debug
-        print("target_name is ", target_name)
-        print("blueside.facilities is ", blueside.facilities)
-        for key in self.blueside.facilities:
-            pylog.info("%s" % self.blueside.facilities[key])
-            if etc_uav_anti_tank.target_name == self.blueside.facilities[
-                    key].strName:
-                target_guid = key
-                return target_guid
-        return target_guid
+    # def _get_target_guid(self):
+    #     """
+    #     获取目标guid
+    #     """
+    #     target_name = etc_uav_anti_tank.target_name
+    #     # for debug
+    #     print("target_name is ", target_name)
+    #     print("blueside.facilities is ", blueside.facilities)
+    #     for key in self.blueside.facilities:
+    #         pylog.info("%s" % self.blueside.facilities[key])
+    #         if etc_uav_anti_tank.target_name == self.blueside.facilities[
+    #                 key].strName:
+    #             target_guid = key
+    #             return target_guid
+    #     return target_guid
 
-    def _get_contact_target_guid(self):
-        target_name = etc_uav_anti_tank.target_name
-        if self.redside.contacts:
-            for key in self.redside.contacts:
-                pylog.info("contact guid:%s" % key)
-                dic = self.redside.contacts[key].__dict__
-                actual_guid = self.redside.contacts[key].m_ActualUnit
-                if etc_uav_anti_tank.target_name == self.blueside.facilities[
-                        actual_guid].strName:
-                    return key
+    # def _get_contact_target_guid(self):
+    #     target_name = etc_uav_anti_tank.target_name
+    #     if self.redside.contacts:
+    #         for key in self.redside.contacts:
+    #             pylog.info("contact guid:%s" % key)
+    #             dic = self.redside.contacts[key].__dict__
+    #             actual_guid = self.redside.contacts[key].m_ActualUnit
+    #             if etc_uav_anti_tank.target_name == self.blueside.facilities[
+    #                     actual_guid].strName:
+    #                 return key
 
-                #pylog.info("contact actual guid:%s" % actual_guid)
-                #for k in self.blueside.facilities:
-                #   if etc_uav_anti_tank.target_name == self.blueside.facilities[k].strName:
-                #       return key
+    #             #pylog.info("contact actual guid:%s" % actual_guid)
+    #             #for k in self.blueside.facilities:
+    #             #   if etc_uav_anti_tank.target_name == self.blueside.facilities[k].strName:
+    #             #       return key
 
     def _check_is_contact_target(self):
         target_name = etc_uav_anti_tank.target_name
@@ -377,9 +402,7 @@ class EnvUavAntiTank(base_env.BaseEnvironment):
         self.blueside.static_construct()
 
     def _init_unit_list(self):
-        """
-        初始化单元列表
-        """
+        # 初始化单元列表
         self.red_unit_list = self._init_red_unit_list()
 
     def get_target_point(self):

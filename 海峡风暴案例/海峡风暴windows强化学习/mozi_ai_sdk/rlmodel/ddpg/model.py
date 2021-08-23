@@ -18,10 +18,12 @@ from mozi_utils import pylog
 
 EPS = 0.003
 
+
 def fanin_init(size, fanin=None):
     fain = fanin or size[0]
-    v = 1./ np.sqrt(256)
-    return torch.Tensor(size).uniform_(-v,v)
+    v = 1. / np.sqrt(256)
+    return torch.Tensor(size).uniform_(-v, v)
+
 
 class Critic(nn.Module):
     '''价值网络'''
@@ -42,7 +44,7 @@ class Critic(nn.Module):
         self.fc2 = nn.Linear(256, 128)
         self.fc2.weight.data = fanin_init(self.fc2.weight.data.size())
 
-        self.fc3 = nn.Linear(128,1)
+        self.fc3 = nn.Linear(128, 1)
         self.fc3.weight.data.uniform_(-EPS, EPS)
 
     # 正向传播
@@ -50,7 +52,7 @@ class Critic(nn.Module):
         s1 = F.relu(self.fcs1(state))
         s2 = F.relu(self.fcs2(s1))
         a1 = F.relu(self.fca1(action))
-        x = torch.cat((s2,a1), dim=1)
+        x = torch.cat((s2, a1), dim=1)
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
@@ -74,19 +76,18 @@ class Actor(nn.Module):
         self.fc2.weight.data = fanin_init(self.fc2.weight.data.size())
 
         # 全连接层
-        self.fc3 = nn.Linear(128,64)
+        self.fc3 = nn.Linear(128, 64)
         self.fc3.weight.data = fanin_init(self.fc3.weight.data.size())
 
         # 全连接层
         self.fc4 = nn.Linear(64, action_dim)
-        self.fc4.weight.data.uniform_(-EPS,EPS)
+        self.fc4.weight.data.uniform_(-EPS, EPS)
 
     def forward(self, state):
         '''正向传播'''
         x = F.relu(self.fc1(state))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        action = F.tanh(self.fc4(x))
+        action = torch.tanh(self.fc4(x))
         action = action * self.action_lim
         return action
-

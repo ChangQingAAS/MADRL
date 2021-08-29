@@ -12,19 +12,18 @@ SERVER_PLAT = "windows"  # windows linux
 SCENARIO_NAME = "demo.scen"  # 想定名称
 SIMULATE_COMPRESSION = 4  # 推演档位:即推演速度
 # todo: 测试这个参数是什么
-# SYNCHRONOUS = True # True同步, False异步 
+SYNCHRONOUS = False  # True同步, False异步
 
 # 这个参数是不是能做成false，但是还是要连墨子AI啊
-SHOW_FIGURE = True  
+SHOW_FIGURE = False
 
 # 这个参数从20000改到100
-target_radius = 100.0
+target_radius = 1000.0
 target_name = "障碍物"
-
 
 # 这个应该是根据起点和障碍位置定的
 task_end_point = {}
-task_end_point["latitude"] = 44.44 
+task_end_point["latitude"] = 44.44
 task_end_point["longitude"] = 33.33
 
 # todo: 这几个mode也要试一下
@@ -40,7 +39,6 @@ MAX_EPISODES = 5000  # 一共训练多少回合
 MAX_BUFFER = 10000
 MAX_STEPS = 30  # 每回合一共做多少次决策
 DURATION_INTERVAL = 120  # 仿真时间多长做一次决策。（单位：秒）# 这个应该和想定文件里给的推演速度有关
-
 
 # 路径定义
 TMP_PATH = "%s/%s/tmp" % (app_abspath, SCENARIO_NAME)

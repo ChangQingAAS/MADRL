@@ -12,7 +12,6 @@
     "git.defaultCloneDirectory": "",
     "git.path": "D://Git//Git//cmd//git.exe",
     "git.autofetch": true,
-    "workbench.iconTheme": "vscode-icons", //启用vscode图标
     // "python.pythonPath": "D:\\Anaconda3\\python.exe", // python3路径
     "python.pythonPath": "D:\\pythonfile\\python.exe",
     "editor.wordWrap": "on",
@@ -33,10 +32,10 @@
     //触发cmd:ctrl+T T
     "topper.customTemplateParameters": [{
         "personalProfile": {
-            "author": "giao者",
+            "author": "ChangQingAAS",
             "copyright": "None",
             "license": "None",
-            "website": "why.com",
+            "website": "github.com/ChangQingAAS",
             "email": "1736731090@qq.com"
         }
     } {

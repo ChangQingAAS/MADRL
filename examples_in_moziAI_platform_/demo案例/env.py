@@ -174,7 +174,8 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
         # 获取到目标点的距离和角度
         target_lat, target_lon = self.get_target_point()
         distance = self.get_target_distance(current_lat, current_lon)
-        task_heading = get_degree(current_lat, current_lon, target_lat, target_lon)
+        task_heading = get_degree(current_lat, current_lon, target_lat,
+                                  target_lon)
 
         # 改变朝向角
         current_heading += action_heading_change
@@ -194,7 +195,7 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
         #   现在好像是在一起的样子
 
         aide_reward = 0
-        main_reward = -abs(distance) / 10000.0
+        main_reward = -abs(distance) / 3000.0
 
         # 拿到障碍方的列表
         unit_list = []
@@ -215,6 +216,11 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
                 distance = get_two_point_distance(lon, lat, obstacle_lon,
                                                   obstacle_lat)
                 aide_reward += abs(distance) / 1000.0
+                # 添加 十分靠近障碍物的惩罚
+                if (obstacle_lon - 0.05 <= lon <= obstacle_lon + 0.05) and (
+                        obstacle_lat - 0.05 <= lat <= obstacle_lat + 0.05):
+                    print("aircraft is too close to obs!")
+                    aide_reward -= 100
 
         print("辅助reward is ", aide_reward)
         print("主线reward is ", main_reward)

@@ -40,7 +40,7 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         重置
         """
         # 保存一下已经训练的轮数
-        self.trainer.save_model(self.episodes, etc.MODELS_PATH)  
+        self.trainer.save_model(self.episodes, etc.MODELS_PATH)
         # 回合数++
         self.episodes += 1
 
@@ -60,8 +60,8 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         super(Agents_Uav_Avoid_Tank, self).step(state_now)
         state = np.float32(state_now)  # 强制转化为浮点类型
 
-        # 1/10的动作随机生成，9/10的动作由模型生成
-        if self.episodes % 10 == 0:
+        # 1/3的动作随机生成，2/3的动作由模型生成
+        if self.episodes % 3 == 0:
             action = self.trainer.get_exploration_action(
                 state)  # 通过模型来生成动作，利用，
         else:

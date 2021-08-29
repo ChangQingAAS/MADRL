@@ -11,7 +11,6 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
-            // "python": "C:/Program Files (x86)/Microsoft Visual Studio/Shared/Python37_64/python.exe", //python3的安装路径
             "python": "D:/pythonfile/python.exe",
             "program": "${file}",
             "cwd": "${workspaceFolder}",
@@ -23,7 +22,6 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
-            // "python": "C:/Program Files (x86)/Microsoft Visual Studio/Shared/Python37_64/python.exe",
             "python": "D:/pythonfile/python.exe",
             "program": "${file}",
             "cwd": "",

@@ -1,6 +1,9 @@
+# 引用Agent
 from mozi_ai_sdk.agents import base_agent
-from mozi_ai_sdk.rlmodel.ddpg import train
-from mozi_ai_sdk.rlmodel.ddpg import buffer
+
+# 调用Agent算法：DDPG
+from ddpg import train
+from ddpg import buffer
 import etc
 import numpy as np
 from pic import write_loss

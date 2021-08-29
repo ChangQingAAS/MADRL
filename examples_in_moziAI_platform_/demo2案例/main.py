@@ -9,9 +9,9 @@ from mozi_utils.pyfile import write_start_step_file
 from mozi_utils.pyfile import read_start_epoch_file
 from mozi_utils.pyfile import write_start_epoch_file
 
-# 墨子AI SDK
-from mozi_ai_sdk.rlmodel.ddpg import train
-from mozi_ai_sdk.rlmodel.ddpg import buffer
+# 调用Agent算法：DDPG
+from  ddpg import train
+from  ddpg import buffer
 
 from env import Env_Uav_Avoid_Tank as Environment
 import etc 

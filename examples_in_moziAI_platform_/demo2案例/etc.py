@@ -1,9 +1,8 @@
 import torch
 import os
 
-app_abspath = os.path.dirname(__file__)
-# USE_CUDA = torch.cuda.is_available()
-USE_CUDA = False
+
+USE_CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if USE_CUDA else "cpu")
 
 SERVER_IP = "127.0.0.1"  # 仿真服务器IP地址
@@ -41,6 +40,7 @@ MAX_STEPS = 30  # 每回合一共做多少次决策
 DURATION_INTERVAL = 120  # 仿真时间多长做一次决策。（单位：秒）# 这个应该和想定文件里给的推演速度有关
 
 # 路径定义
+app_abspath = os.path.dirname(__file__)
 TMP_PATH = "%s/%s/tmp" % (app_abspath, SCENARIO_NAME)
-OUTPUT_PATH = "%s/%s/output" % (app_abspath, SCENARIO_NAME)  # 多了一层目录
-MODELS_PATH = "%s/Models/" % OUTPUT_PATH  # 模型输出路径
+OUTPUT_PATH = "%s/output" % app_abspath   
+MODELS_PATH = "%s/Models/" % app_abspath    # 模型输出路径

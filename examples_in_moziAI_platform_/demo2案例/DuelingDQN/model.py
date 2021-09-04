@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
-from mozi_utils import pylog
 
 
 class DuelingDeepQNetwork(nn.Module):
@@ -62,10 +61,10 @@ class DuelingDeepQNetwork(nn.Module):
 
         return V,A
 
-    # def save_checkpoint(self):
-    #     print('... saving checkpoint ...')
-    #     T.save(self.state_dict(), self.checkpoint_file)
+    def save_checkpoint(self):
+        print('... saving checkpoint ...')
+        T.save(self.state_dict(), self.checkpoint_file)
 
-    # def load_checkpoint(self):
-    #     print('... loading checkpoint ...')
-    #     self.load_state_dict(T.load(self.checkpoint_file))
+    def load_checkpoint(self):
+        print('... loading checkpoint ...')
+        self.load_state_dict(T.load(self.checkpoint_file))

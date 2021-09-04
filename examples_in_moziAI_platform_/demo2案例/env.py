@@ -1,17 +1,15 @@
 import numpy as np
-from math import cos
-from math import radians
-from mozi_utils import pylog
-from mozi_utils.geo import get_point_with_point_bearing_distance
-from mozi_utils.geo import get_degree
-from mozi_utils.geo import get_two_point_distance
+
 from mozi_ai_sdk.env import base_env
+
 import etc
+import log_utils
+from geo_utils import get_point_with_point_bearing_distance
+from geo_utils import get_degree
+from geo_utils import get_two_point_distance
+
 
 class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
-    """
-    功能：构造函数
-    """
     def __init__(self,
                  IP,
                  AIPort,
@@ -38,7 +36,7 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
     def reset(self):
         """
         重置
-        返回：当前状体及回报值
+        返回：当前状态及回报值
         """
         # 调用父类的重置函数
         super(Env_Uav_Avoid_Tank, self).reset(etc.app_mode)
@@ -51,24 +49,24 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
         reward_now = self.get_reward(None)
         return state_now, reward_now
 
-    '''
-    功能：环境的执行动作函数
-    流程：
-        输入动作
-        执行动作
-        更新态势
-        获取观察
-        获取reward
-        检查是否结束
-    返回： 1）state：状态；
-           2）reward：回报值
-    '''
-
     def execute_action(self, action_value):
+        '''
+        功能：环境的执行动作函数
+        流程：
+            输入动作
+            执行动作
+            更新态势
+            获取观察
+            获取reward
+            检查是否结束
+        返回： 1）state：状态；
+            2）reward：回报值
+        '''
         super(Env_Uav_Avoid_Tank, self).step()
 
         # 根据动作计算飞机的期望路径点
         waypoint = self._get_aircraft_waypoint(action_value)
+        
         # 当前的位置
         # longitude = self.observation[0]
         # latitude = self.observation[1]
@@ -296,9 +294,9 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
         # 朝向
         heading = obs[2]
         # 航路点朝向角改变幅度，这里有一个超参，现设置为5
-        print(" action is ",action_value)
-        waypoint_heading = self._get_waypoint_heading(
-            heading, action_value * 5)
+        print(" action is ", action_value)
+        waypoint_heading = self._get_waypoint_heading(heading,
+                                                      action_value * 5)
         waypoint = self._get_new_waypoint(waypoint_heading, latitude,
                                           longitude)
 

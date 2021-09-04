@@ -2,52 +2,41 @@ import psutil
 import datetime
 import numpy as np
 
-# 墨子Utils
-from mozi_utils.pyfile import read_start_epoch
-from mozi_utils.pyfile import read_start_step
-from mozi_utils.pyfile import write_start_step_file
-from mozi_utils.pyfile import read_start_epoch_file
-from mozi_utils.pyfile import write_start_epoch_file
-
-# 调用Agent算法：DuelingDQN
+# 调用Agent算法：DuelingDQN  
 from DuelingDQN import train
 from DuelingDQN import buffer
-
-from env import Env_Uav_Avoid_Tank as Environment
-import etc 
+from env import Env_Uav_Avoid_Tank
+import etc
 from agents import Agents_Uav_Avoid_Tank
-from pic import show_pic
+from pic_utils import show_pic
+from file_utils import file
+
 #  设置墨子安装目录下bin目录为MOZIPATH，程序会自动启动墨子
 # os.environ['MOZIPATH'] = 'D:\\MoZiSystem\\Mozi\\MoziServer\\bin'
 
 
 def main():
-    """主函数，用于构建训练环境及智能体，并进行训练"""
+    """
+    主函数，用于构建训练环境及智能体，并进行训练
+    """
 
     # 创建环境对象, 并启动之。仿真服务器是环境的一部分，它也在环境中启动了
-    env = Environment(etc.SERVER_IP, etc.SERVER_PORT, etc.SCENARIO_NAME,
-                      etc.SIMULATE_COMPRESSION, etc.DURATION_INTERVAL,
-                      etc.SERVER_PLAT)
+    env = Env_Uav_Avoid_Tank(etc.SERVER_IP, etc.SERVER_PORT, etc.SCENARIO_NAME,
+                             etc.SIMULATE_COMPRESSION, etc.DURATION_INTERVAL,
+                             etc.SERVER_PLAT)
 
-    # 开始的轮数
-    epoch_file_path = "%s/epoch.txt" % etc.OUTPUT_PATH
-    start_epoch = read_start_epoch(epoch_file_path)  # 目前已经训练的轮数
-
-    # 开始步数
-    step_file_path = "%s/step.txt" % etc.OUTPUT_PATH
-    start_step = read_start_step(step_file_path)
-    cur_step = start_step
-    print("start step: %s" % cur_step)
+    # 创建输出文件类，并进行文件初始化
+    out_file = file()
+    start_epoch, start_step, current_step = out_file.initialize()
 
     # 创建智能体对象
     agent = Agents_Uav_Avoid_Tank(env, start_epoch)
 
     # 启动训练
     try:
-        for _ep in range(start_epoch, etc.MAX_EPISODES):
-            print(" ")
-            print("%s：第%s轮训练开始======================================" %
-                  (datetime.datetime.now(), _ep))
+        for epoch_counter in range(start_epoch, etc.MAX_EPISODES):
+            print("\n%s：第%s轮训练开始======================================" %
+                  (datetime.datetime.now(), epoch_counter))
 
             # 重置智能体、环境、训练器
             state_now, reward_now = env.reset()
@@ -64,28 +53,30 @@ def main():
 
                 # 根据推演结果，训练一次智能体
                 agent.train(np.float32(state_now), action_new, reward_new,
-                            np.float32(state_new), cur_step)
+                            np.float32(state_new), current_step)
 
-                cur_step += 1
-                write_start_step_file(step_file_path, str(cur_step))
+                current_step += 1
+                out_file.write_step(current_step)
+
                 # 更新状态、回报值
                 state_now = state_new
                 reward_now = reward_new
 
-                # 打印提示
-                print("")
-                print("%s：轮数:%s 决策步数:%s  Reward:%.2f" %
-                      (datetime.datetime.now(), _ep, step, reward_now))
+                # 打印infO
+                print("\n%s：轮数:%s 决策步数:%s  Reward:%.2f" %
+                      (datetime.datetime.now(), epoch_counter, step, reward_now))
 
                 # 检查是否结束本轮推演
                 if env.check_done(action_new):
                     break
-                # 如果显示此图，代码会卡住
-                if cur_step % 100 == 0:
-                    show_pic()
-            write_start_epoch_file(epoch_file_path, str(_ep))
+
+                # if current_step % 100 == 0:
+                #     show_pic()
+
+            out_file.write_epoch(epoch_counter)
 
     except KeyboardInterrupt:
         pass
+
 
 main()

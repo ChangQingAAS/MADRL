@@ -26,7 +26,6 @@ class Trainer:
                  write_loss,
                  action_lim,
                  dev,
-                 epoch,
                  model_save_path,
                  gamma=0.99,
                  epsilon=0.9,
@@ -164,34 +163,47 @@ class Trainer:
         self.decrement_epsilon()
 
     def get_models_path(self):
-        return "./"
+        return "./Models"
 
-    def save_model(self, episode_count, model_save_path=None):
-        '''保存模型'''
-        # torch.save(self.target_actor.state_dict(), './Models/' + str(episode_count) + '_actor.pt')
-        if model_save_path == None:
-            model_save_path = self.get_models_path()
-        torch.save(self.target_actor.state_dict(),
-                   model_save_path + str(episode_count) + '_actor.pt')
-        torch.save(self.target_critic.state_dict(),
-                   model_save_path + str(episode_count) + '_critic.pt')
-        print("%s：%s Models saved successfully" %
-              (datetime.datetime.now(), episode_count))
-        # print("%s：轮数:%s 决策步数:%s  Reward:%.2f" % (datetime.now(), _ep, step, reward_now))
+    ## TODO：加载模型和建立模型
+    # def save_model(self, episode_count, model_save_path=None):
+    #     '''
+    #     保存模型
+    #     '''
+    #     # torch.save(self.target_actor.state_dict(), './Models/' + str(episode_count) + '_actor.pt')
+    #     if model_save_path == None:
+    #         model_save_path = self.get_models_path()
+    #     torch.save(self.target_actor.state_dict(),
+    #                model_save_path + str(episode_count) + '_actor.pt') 
+    #     print("%s：%s Models saved successfully" %
+    #           (datetime.datetime.now(), episode_count))
+    #     # print("%s：轮数:%s 决策步数:%s  Reward:%.2f" % (datetime.now(), _ep, step, reward_now))
 
-    def load_models(self, episode, model_save_path=None):
-        '''载入以前训练过的模型, 包括策略网络和价值网络'''
-        if model_save_path == None:
-            model_save_path = self.get_models_path()
-        # self.critic.load_state_dict(torch.load(self.get_models_path() + str(episode) + '_critic.pt'))
-        self.critic.load_state_dict(
-            torch.load(model_save_path + str(episode) + '_critic.pt'))
-        # self.actor.load_state_dict(torch.load(self.get_models_path() + str(episode) + '_actor.pt'))
-        self.actor.load_state_dict(
-            torch.load(model_save_path + str(episode) + '_actor.pt'))
-        utils.hard_update(self.target_actor, self.actor)
-        utils.hard_update(self.target_critic, self.critic)
-        print("Models loaded successfully")
+    # def load_models(self, episode, model_save_path=None):
+    #     '''
+    #     载入以前训练过的模型, 包括策略网络和价值网络
+    #     '''
+    #     if model_save_path == None:
+    #         model_save_path = self.get_models_path()
+    #     # self.critic.load_state_dict(torch.load(self.get_models_path() + str(episode) + '_critic.pt'))
+    #     self.critic.load_state_dict(
+    #         torch.load(model_save_path + str(episode) + '_critic.pt'))
+    #     # self.actor.load_state_dict(torch.load(self.get_models_path() + str(episode) + '_actor.pt'))
+    #     self.actor.load_state_dict(
+    #         torch.load(model_save_path + str(episode) + '_actor.pt'))
+    #     utils.hard_update(self.target_actor, self.actor)
+    #     utils.hard_update(self.target_critic, self.critic)
+    #     print("Models loaded successfully")
+
+        # 保存模型
+    def save_models(self):
+        self.q_eval.save_checkpoint()
+        self.q_next.save_checkpoint()
+
+    # 加载模型
+    def load_models(self):
+        self.q_eval.load_checkpoint()
+        self.q_next.load_checkpoint()
 
     #############  ADD  ###################
     def choose_action(self, observation):

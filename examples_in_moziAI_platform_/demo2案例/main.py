@@ -9,9 +9,9 @@ from mozi_utils.pyfile import write_start_step_file
 from mozi_utils.pyfile import read_start_epoch_file
 from mozi_utils.pyfile import write_start_epoch_file
 
-# 调用Agent算法：DDPG
-from  ddpg import train
-from  ddpg import buffer
+# 调用Agent算法：DuelingDQN
+from DuelingDQN import train
+from DuelingDQN import buffer
 
 from env import Env_Uav_Avoid_Tank as Environment
 import etc 
@@ -56,7 +56,7 @@ def main():
             # 智能体作决策，产生动作，动作影响环境，智能体根据动作的效果进行训练优化
             for step in range(etc.MAX_STEPS):
                 # 智能体根据当前的状态及回报值，进行决策，生成下一步的动作
-                action_new = agent.make_decision(np.float32(state_now),
+                action_new = agent.choose_action(np.float32(state_now),
                                                  reward_now)
 
                 # 环境执行动作，生成下一步的状态及回报值

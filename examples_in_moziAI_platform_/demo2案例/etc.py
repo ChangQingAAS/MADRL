@@ -17,11 +17,11 @@ SYNCHRONOUS = False  # True同步, False异步
 # 这个参数是不是能做成false，但是还是要连墨子AI啊
 SHOW_FIGURE = False
 
-# 这个参数从20000改到100
+# 这个参数从20000改到1000
 target_radius = 1000.0
 target_name = "障碍物"
 
-# 这个应该是根据起点和障碍位置定的
+#  终点
 task_end_point = {}
 task_end_point["latitude"] = 44.44
 task_end_point["longitude"] = 33.33

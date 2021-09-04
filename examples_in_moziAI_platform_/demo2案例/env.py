@@ -8,7 +8,6 @@ from mozi_utils.geo import get_two_point_distance
 from mozi_ai_sdk.env import base_env
 import etc
 
-
 class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
     """
     功能：构造函数
@@ -169,7 +168,7 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
         current_heading = obs[2]
 
         # 朝向角改变幅度，这里有一个超参
-        action_heading_change = action_value[0].item() * 5
+        action_heading_change = action_value * 5
 
         # 获取到目标点的距离和角度
         target_lat, target_lon = self.get_target_point()
@@ -297,8 +296,9 @@ class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):
         # 朝向
         heading = obs[2]
         # 航路点朝向角改变幅度，这里有一个超参，现设置为5
+        print(" action is ",action_value)
         waypoint_heading = self._get_waypoint_heading(
-            heading, action_value[0].item() * 5)
+            heading, action_value * 5)
         waypoint = self._get_new_waypoint(waypoint_heading, latitude,
                                           longitude)
 

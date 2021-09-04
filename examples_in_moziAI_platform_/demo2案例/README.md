@@ -4,7 +4,7 @@ Agent表示：经度，维度，朝向
 
 4 agents（红色）： 结伴飞行
 
-trainer: ddpg算法
+trainer: Dueling DQN算法
 
 4障碍物（蓝色）： 分布在不同区域、静态
 

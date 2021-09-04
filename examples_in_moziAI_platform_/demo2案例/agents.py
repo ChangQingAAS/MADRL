@@ -1,13 +1,12 @@
 # 引用Agent
 from mozi_ai_sdk.agents import base_agent
 
-# 调用Agent算法：DDPG
-from ddpg import train
-from ddpg import buffer
+# 调用Agent算法：DuelingDQN
+from DuelingDQN import train
+from DuelingDQn import buffer
 import etc
 import numpy as np
 from pic import write_loss
-
 
 class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
     """
@@ -17,21 +16,16 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         super(Agents_Uav_Avoid_Tank, self).__init__()
         '''创建训练器'''
         self.episodes = start_epoch
-        self.ram = buffer.MemoryBuffer(etc.MAX_BUFFER)  # 缓存区大小
+        self.ram = buffer.ReplayBuffer(etc.MAX_BUFFER)  # 缓存区大小
         self.trainer = train.Trainer(
-            env.state_space_dim,  # 状态空间维度: 经度，维度，朝向
-            # 这个参量在这里只有定义没有使用，是为了传给ddpg的trainer加OU噪声，防止过拟合
-            env.action_space_dim,
-            # 在ddpg里的actor，由动作空间大小算出来的OU噪声乘以action_max(在实际应用中，是为了对action进行缩放)
-            env.action_max,
-            self.ram,
-            # CPU or GPU
-            etc.device,
             # None, 把loss写入文件的函数
             write_loss,
+            # 看做class trainer中的action_lim
+            env.action_max, 
+            # CPU or GPU
+            etc.device,
             int(start_epoch),
             etc.MODELS_PATH)
-
         self.env = env
         self.train_step = 0  # 当前决策步数
 
@@ -43,7 +37,7 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         重置
         """
         # 保存一下已经训练的轮数
-        self.trainer.save_model(self.episodes, etc.MODELS_PATH)
+        # self.trainer.save_model(self.episodes, etc.MODELS_PATH)
         # 回合数++
         self.episodes += 1
 
@@ -93,9 +87,14 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         参数：state_now:当前状态空间 reward_now:当前的回报值
         """
         # 添加最新经验，并优化训练一把，再做决策
-        self.ram.add(state_last, action_last, reward_now, state_new)
-        self.trainer.optimize(cur_step)
+        self.ram.store_transition(state_last, action_last, reward_now, state_new)
+        self.trainer.optimize()
         self.train_step += 1
 
         # 返回动作
         return True
+
+    def choose_action(self, observation, reward_now):
+        action = self.trainer.choose_action(observation)
+        print("action is ",action)
+        return action

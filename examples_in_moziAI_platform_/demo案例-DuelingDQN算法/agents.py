@@ -7,7 +7,7 @@ import numpy as np
 from DuelingDQN import train
 from DuelingDQN import buffer
 import etc
-from pic_utils import write_loss
+from utils.pic_utils import write_loss
 
 class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
     """
@@ -17,7 +17,6 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         super(Agents_Uav_Avoid_Tank, self).__init__()
         
         self.episodes = int(start_epoch)
-        self.memory = buffer.ReplayBuffer(etc.MAX_BUFFER)  # 缓存区大小
 
         # 创建训练器 
         # TODO： 修改这里传入的参数
@@ -95,7 +94,8 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         参数：state_now:当前状态空间 reward_now:当前的回报值
         """
         # 添加最新经验，并优化训练一把，再做决策
-        self.memory.store_transition(state_last, action_last, reward_now, state_new)
+        self.trainer.store_transition(state_last, action_last, reward_now, state_new)
+        # print("self.trainer is ", self.trainer.memory)
         self.trainer.optimize()
         self.train_step += 1
 
@@ -103,6 +103,7 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
         return True
 
     def choose_action(self, observation, reward_now):
-        action = self.trainer.choose_action(observation)
+        print("observation[:3] is ", observation[:3])
+        action = self.trainer.choose_action(observation[:3])
         print("action is ", action)
         return action

@@ -11,6 +11,7 @@ class ReplayBuffer:
         self.mem_size = size
         # buffer当前大小
         self.len = 0
+        # print("self.buffer is ", self.buffer)
 
     # 抽样
     def sample_memory(self, batch_size):
@@ -18,13 +19,22 @@ class ReplayBuffer:
         # 抽样
         batch = []
         batch_size = min(batch_size, self.len)
+
         batch = random.sample(self.buffer, batch_size)
+        # print("batch is ", batch)
         
         # 分开
-        state_arr = np.float32([arr[0] for arr in batch])
+        state_arr = np.float32([arr[0][:3] for arr in batch])
         action_arr = np.float32([arr[1] for arr in batch])
         reward_arr = np.float32([arr[2] for arr in batch])
-        state1_arr = np.float32([arr[3] for arr in batch])
+        state1_arr = np.float32([arr[3][:3] for arr in batch])
+
+        # for arr in batch:
+        #     print(arr[0])
+        #     print(arr[1])
+        #     print(arr[2])
+        #     print(arr[3])
+
 
         return state_arr, action_arr, reward_arr, state1_arr
 
@@ -39,3 +49,5 @@ class ReplayBuffer:
         if self.len > self.mem_size:
             self.len = self.mem_size
         self.buffer.append(trainsition)
+        print("self.buffer is ", self.buffer)
+

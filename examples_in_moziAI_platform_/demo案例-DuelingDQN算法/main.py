@@ -7,9 +7,10 @@ from DuelingDQN import train
 from DuelingDQN import buffer
 from env import Env_Uav_Avoid_Tank
 import etc
+
 from agents import Agents_Uav_Avoid_Tank
-from pic_utils import show_pic
-from file_utils import file
+from utils.pic_utils import show_pic
+from utils.file_utils import file
 
 #  设置墨子安装目录下bin目录为MOZIPATH，程序会自动启动墨子
 # os.environ['MOZIPATH'] = 'D:\\MoZiSystem\\Mozi\\MoziServer\\bin'
@@ -50,7 +51,7 @@ def main():
 
                 # 环境执行动作，生成下一步的状态及回报值
                 state_new, reward_new = env.execute_action(action_new)
-
+                
                 # 根据推演结果，训练一次智能体
                 agent.train(np.float32(state_now), action_new, reward_new,
                             np.float32(state_new), current_step)

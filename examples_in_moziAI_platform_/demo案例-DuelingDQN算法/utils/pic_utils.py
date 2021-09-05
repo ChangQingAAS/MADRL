@@ -5,7 +5,6 @@ import os
 import collections
 import cv2
 
-import file_utils as pyfile
 
 def read_reward_file():
     # 读取奖励文档
@@ -29,7 +28,7 @@ def write_loss(step, loss_value, loss_name="loss_critic"):
     :param loss_name:创建损失的文档名
     :return:
     """
-    pyfile.create_dir(etc.OUTPUT_PATH)
+    # pyfile.create_dir(etc.OUTPUT_PATH)
     file_path = "%s/%s.txt" % (etc.OUTPUT_PATH, loss_name)
     if not os.path.exists(file_path):
         f = open(file_path, "w")

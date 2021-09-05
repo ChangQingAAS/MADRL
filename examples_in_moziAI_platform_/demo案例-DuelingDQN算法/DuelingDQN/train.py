@@ -9,13 +9,21 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-from . import noise
 from . import buffer
-from . import model
+from . import net
+from . import noise
 
-BATCH_SIZE = 128  #
+BATCH_SIZE = 32
+LR = 0.01
+EPSILON = 0.9
+GAMMA = 0.9
+TARGET_REPLACE_ITER = 100
+MEMORY_CAPACITY = 2000
+EPISODE_NUM = 400
+
 LEARNING_RATE = 0.001  # 训练学习率
 GAMMA = 0.99  # 奖励随时间步的衰减因子
+
 
 class Trainer:
     '''训练器'''
@@ -27,7 +35,7 @@ class Trainer:
                  gamma=GAMMA,
                  epsilon=0.9,
                  lr=LEARNING_RATE,
-                 n_actions=12,
+                 n_actions=3,
                  input_dims=3,
                  mem_size=50000,
                  batch_size=BATCH_SIZE,
@@ -51,24 +59,25 @@ class Trainer:
         self.learn_step_counter = 0
 
         self.memory = buffer.ReplayBuffer(mem_size)
-        self.q_eval = model.DuelingDeepQNetwork(self.lr,
-                                                self.n_actions,
-                                                input_dims=self.input_dims,
-                                                name=self.algo + '_q_eval',
-                                                chkpt_dir=self.chkpt_dir)
-
-        self.q_next = model.DuelingDeepQNetwork(self.lr,
-                                                self.n_actions,
-                                                input_dims=self.input_dims,
-                                                name=self.algo + '_q_next',
-                                                chkpt_dir=self.chkpt_dir)
-
+        self.network = net.DuelingDeepQNetwork(
+            lr,
+            n_actions,
+            input_dims,
+        )
         # self.action_dim = action_dim 即n_actions
-        self.action_lim = action_lim # 应该是最大值，TODO：验证一下
+        self.action_lim = action_lim  # 应该是最大值，TODO：验证一下
         self.iter = 0
         self.noise = noise.OrnsteinUhlenbeckActionNoise(self.n_actions)
         self.device = dev
         self.write_loss = write_loss
+
+        self.ACTION_NUM = n_actions
+        self.STATE_NUM = input_dims
+        self.ENV_A_SHAPE = 0 
+        self.loss_func = nn.MSELoss()
+        self.optimizer = torch.optim.Adam(self.network.eval_net.parameters(), lr=LR)
+
+
 
     # 存储转换状态
     def store_transition(self, state, action, reward, state_):
@@ -86,117 +95,57 @@ class Trainer:
 
         return states, actions, rewards, states_
 
-    # 选择动作，这里的选择动作放在了Class Agent里，考虑把它放入env里的可能
-    def choose_action(self, observation, reward_now):
-        if np.random.random() > self.epsilon:
-            state = T.tensor([observation],
-                             dtype=T.float).to(self.q_eval.device)
-            _, advantage = self.q_eval.forward(state)
-            action = T.argmax(advantage).item()
-        else:
-            action = np.random.choice(self.action_space)
-
+    # 选择动作
+    def choose_action(self, observation):  # epsilon-greedy策略：避免收敛在局部最优
+        print("observation[:3] is ", observation[:3])
+        
+        observation = torch.unsqueeze(torch.FloatTensor(observation), 0)
+        if np.random.uniform() <= EPSILON:  # 以epsilon的概率利用
+            actions_value = self.network.eval_net.forward(observation)
+            print("actions_value is ", actions_value)
+            action = torch.max(actions_value, 1)[1].data.numpy()
+            print("action is ",action)
+        else:  # 以1-epsilon的概率探索
+            print("self.n_actions is ", self.n_actions)
+            action = np.random.randint(0, self.n_actions)
+            # action = actions[0]
         return action
 
-    # 应该算是更新网络参数吧
-    def replace_target_network(self):
-        if self.replace_target_cnt is not None and \
-           self.learn_step_counter % self.replace_target_cnt == 0:
-            self.q_next.load_state_dict(self.q_eval.state_dict())
-
-    def decrement_epsilon(self):
-        self.epsilon = self.epsilon - self.eps_dec \
-                         if self.epsilon > self.eps_min else self.eps_min
-
-    # 训练网络参数
     def optimize(self):
-        # if self.memory.mem_cntr < self.batch_size:
-        #     return
+        if self.network.learn_step_counter % TARGET_REPLACE_ITER == 0:
+            # TargetduelingdqnNet: 用eval_net来更改targetnet的参数
+            self.network.target_net.load_state_dict(
+                self.network.eval_net.state_dict())
+        self.network.learn_step_counter += 1
 
-        self.q_eval.optimizer.zero_grad()
+        batch_state, batch_action, batch_reward, batch_next_state = self.memory.sample_memory(
+            BATCH_SIZE)
 
-        self.replace_target_network()
+        batch_state = torch.from_numpy(batch_state).float()
+        batch_action = torch.from_numpy(batch_action).long()
+        batch_reward = torch.from_numpy(batch_reward).float()
+        batch_next_state = torch.from_numpy(batch_next_state).float()
 
-        states, actions, rewards, states_ = self.sample_memory()
+        print("batch_state is ", batch_state)
+        print("batch_action is ", batch_action)
+        # print("batch_reward.shape is ", batch_reward.shape)
+        # print("batch_next_state.shape is ", batch_next_state.shape)
 
-        V_s, A_s = self.q_eval.forward(states)
-        V_s_, A_s_ = self.q_next.forward(states_)
+        q_next = self.network.target_net(
+            batch_next_state).detach()  # 切一段下来，避免反向传播
+        print("q_next.shape is ", q_next.shape)
 
-        indices = np.arange(self.batch_size)
+        print("self.network.eval_net(batch_state) is ",self.network.eval_net(batch_state))
+        q_eval = self.network.eval_net(batch_state).gather(
+            1, batch_action)  # 从eval中获取价值函数
+        print("q_eval.shape is ", q_eval.shape)
 
-        # q_pred = T.add(V_s, (A_s - A_s.mean(dim=1, keepdim=True)))[indices,
-        #                                                            actions]
+        
 
-        q_pred = T.add(V_s, (A_s - A_s.mean(dim=1, keepdim=True)))[0]
-        print("q_pred is ", q_pred)
+        q_target = batch_reward + GAMMA * q_next.max(1)[0].view(-1,1)  # 使用target_net来推荐最大reward值
 
-        q_next = T.add(V_s_,
-                       (A_s_ - A_s_.mean(dim=1, keepdim=True))).max(dim=1)[0]
+        loss = self.loss_func(q_eval, q_target)  # 计算loss
 
-        print("q_next is", q_next)
-        print("rewards is ", rewards)
-        rewards = torch.randn(1, 3).type(torch.FloatTensor)
-        print("rewards is ", rewards)
-
-        # q_next[dones] = 0.0
-        q_target = rewards + self.gamma * q_next
-
-        print("q_target is ", q_target)
-        print("q_target.shape is ", q_target.shape)
-
-        loss = self.q_eval.loss(q_target, q_pred).to(self.q_eval.device)
-        print("loss is ", loss)
-        print("loss.shape is ", loss.shape)
-        # loss = loss.reshape(-1,1)
-        # print("loss.shape is ",loss.shape)
-
-        loss.backward(loss.clone().detach())
-        self.q_eval.optimizer.step()
-        self.learn_step_counter += 1
-
-        self.decrement_epsilon()
-
-    def get_models_path(self):
-        return "./Models"
-
-    ## TODO：加载模型和建立模型
-    # def save_model(self, episode_count, model_save_path=None):
-    #     '''
-    #     保存模型
-    #     '''
-    #     # torch.save(self.target_actor.state_dict(), './Models/' + str(episode_count) + '_actor.pt')
-    #     if model_save_path == None:
-    #         model_save_path = self.get_models_path()
-    #     torch.save(self.target_actor.state_dict(),
-    #                model_save_path + str(episode_count) + '_actor.pt')
-    #     print("%s：%s Models saved successfully" %
-    #           (datetime.datetime.now(), episode_count))
-    #     # print("%s：轮数:%s 决策步数:%s  Reward:%.2f" % (datetime.now(), _ep, step, reward_now))
-
-    # def load_models(self, episode, model_save_path=None):
-    #     '''
-    #     载入以前训练过的模型, 包括策略网络和价值网络
-    #     '''
-    #     if model_save_path == None:
-    #         model_save_path = self.get_models_path()
-    #     # self.critic.load_state_dict(torch.load(self.get_models_path() + str(episode) + '_critic.pt'))
-    #     self.critic.load_state_dict(
-    #         torch.load(model_save_path + str(episode) + '_critic.pt'))
-    #     # self.actor.load_state_dict(torch.load(self.get_models_path() + str(episode) + '_actor.pt'))
-    #     self.actor.load_state_dict(
-    #         torch.load(model_save_path + str(episode) + '_actor.pt'))
-    #     utils.hard_update(self.target_actor, self.actor)
-    #     utils.hard_update(self.target_critic, self.critic)
-    #     print("Models loaded successfully")
-
-    # 保存模型
-    def save_models(self):
-        self.q_eval.save_checkpoint()
-        self.q_next.save_checkpoint()
-
-    # 加载模型
-    def load_models(self):
-        self.q_eval.load_checkpoint()
-        self.q_next.load_checkpoint()
-
-    
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()

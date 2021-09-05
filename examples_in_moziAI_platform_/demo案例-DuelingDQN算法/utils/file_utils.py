@@ -2,18 +2,26 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-import log_utils as pylog
+import utils.log_utils as pylog
+import sys 
+sys.path.append("..") 
+
+import etc
+
 
 class file():
     def __init__(self):
         super(file, self).__init__()
 
         # 绝对路径定义
-        self.ABS_PATH = os.path.dirname(__file__)
+        self.ABS_PATH = etc.app_abspath
+        print(self.ABS_PATH)
         # 输出路径定义
-        self.OUTPUT_PATH = "%s/output" % self.ABS_PATH
+        self.OUTPUT_PATH = "%s/output/" % self.ABS_PATH
+        print(self.OUTPUT_PATH)
         # 指定写入回合数的文件路径
         self.epoch_file_path = "%s/epoch.txt" % self.OUTPUT_PATH
+        print(self.epoch_file_path)
         # 本次开始回合
         self.start_epoch = 0
         # 指定写入step的文件路径

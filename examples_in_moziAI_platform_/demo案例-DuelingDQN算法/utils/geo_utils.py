@@ -1,5 +1,4 @@
 from math import radians, cos, sin, asin, sqrt, degrees, atan2, degrees
-from mozi_utils import pylog
 from collections import namedtuple
 import numpy as np
 import bisect
@@ -14,7 +13,6 @@ def get_point_with_point_bearing_distance(lat, lon, bearing, distance):
     :param distance:距离
     :return:
     """
-    # pylog.info("lat:%s lon:%s bearing:%s distance:%s" % (lat, lon, bearing, distance))
     radiusEarthKilometres = 3440
     initialBearingRadians = radians(bearing) # 转成弧度制
     disRatio = distance / radiusEarthKilometres

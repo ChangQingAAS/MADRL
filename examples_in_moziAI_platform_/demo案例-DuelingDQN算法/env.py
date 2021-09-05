@@ -3,10 +3,10 @@ import numpy as np
 from mozi_ai_sdk.env import base_env
 
 import etc
-import log_utils
-from geo_utils import get_point_with_point_bearing_distance
-from geo_utils import get_degree
-from geo_utils import get_two_point_distance
+import utils.log_utils
+from utils.geo_utils import get_point_with_point_bearing_distance
+from utils.geo_utils import get_degree
+from utils.geo_utils import get_two_point_distance
 
 
 class Env_Uav_Avoid_Tank(base_env.BaseEnvironment):

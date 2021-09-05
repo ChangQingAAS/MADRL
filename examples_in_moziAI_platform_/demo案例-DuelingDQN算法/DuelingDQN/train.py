@@ -100,6 +100,7 @@ class Trainer:
         print("observation[:3] is ", observation[:3])
         
         observation = torch.unsqueeze(torch.FloatTensor(observation), 0)
+        EPSILON = 1
         if np.random.uniform() <= EPSILON:  # 以epsilon的概率利用
             actions_value = self.network.eval_net.forward(observation)
             print("actions_value is ", actions_value)
@@ -108,7 +109,6 @@ class Trainer:
         else:  # 以1-epsilon的概率探索
             print("self.n_actions is ", self.n_actions)
             action = np.random.randint(0, self.n_actions)
-            # action = actions[0]
         return action
 
     def optimize(self):
@@ -126,23 +126,24 @@ class Trainer:
         batch_reward = torch.from_numpy(batch_reward).float()
         batch_next_state = torch.from_numpy(batch_next_state).float()
 
-        print("batch_state is ", batch_state)
-        print("batch_action is ", batch_action)
-        # print("batch_reward.shape is ", batch_reward.shape)
+        print("batch_state.shape is ", batch_state.shape)
+        print("batch_action.shape is ", batch_action.shape)
+        print("batch_reward.shape is ", batch_reward.shape)
         # print("batch_next_state.shape is ", batch_next_state.shape)
 
         q_next = self.network.target_net(
             batch_next_state).detach()  # 切一段下来，避免反向传播
         print("q_next.shape is ", q_next.shape)
 
-        print("self.network.eval_net(batch_state) is ",self.network.eval_net(batch_state))
-        q_eval = self.network.eval_net(batch_state).gather(
-            1, batch_action)  # 从eval中获取价值函数
+        # print("self.network.eval_net(batch_state) is ",self.network.eval_net(batch_state))
+        q_eval = self.network.eval_net(batch_state)
         print("q_eval.shape is ", q_eval.shape)
 
-        
+        # 补丁
+        batch_reward = torch.randn(q_eval.shape)
 
         q_target = batch_reward + GAMMA * q_next.max(1)[0].view(-1,1)  # 使用target_net来推荐最大reward值
+        print("q_target.shape is ",q_target.shape)
 
         loss = self.loss_func(q_eval, q_target)  # 计算loss
 

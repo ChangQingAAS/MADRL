@@ -49,5 +49,5 @@ class ReplayBuffer:
         if self.len > self.mem_size:
             self.len = self.mem_size
         self.buffer.append(trainsition)
-        print("self.buffer is ", self.buffer)
+        # print("self.buffer is ", self.buffer)
 

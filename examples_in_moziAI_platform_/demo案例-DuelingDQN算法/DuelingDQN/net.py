@@ -27,19 +27,19 @@ class duelingdqnNet(nn.Module):
         self.fc2_v = nn.Linear(in_features=512, out_features=1)
 
     def forward(self, x):
-        print("x.shape is ", x.shape)
+        # print("x.shape is ", x.shape)
         a = F.relu(self.fc1_a(x))
-        print("a.shape is ", a.shape)
+        # print("a.shape is ", a.shape)
         v = F.relu(self.fc1_v(x))
-        print("v.shape is ", v.shape)
+        # print("v.shape is ", v.shape)
 
         a = self.fc2_a(a)
-        print("a.shape is ", a.shape)
+        # print("a.shape is ", a.shape)
         v = self.fc2_v(v).expand(x.size(0), self.ACTION_NUM)
-        print("v.shape is ", v.shape)
+        # print("v.shape is ", v.shape)
 
         x = a + v - a.mean(1).unsqueeze(1).expand(x.size(0), self.ACTION_NUM)
-        print("x.shape is ", x.shape)
+        # print("x.shape is ", x.shape)
         return x
 
 

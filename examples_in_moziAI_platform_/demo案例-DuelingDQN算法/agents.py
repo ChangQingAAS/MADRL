@@ -4,7 +4,7 @@ from mozi_ai_sdk.agents import base_agent
 import numpy as np
 
 # 调用Agent算法：DuelingDQN
-from DuelingDQN import train
+from DuelingDQN import trainer
 from DuelingDQN import buffer
 import etc
 from utils.pic_utils import write_loss
@@ -20,7 +20,7 @@ class Agents_Uav_Avoid_Tank(base_agent.BaseAgent):
 
         # 创建训练器 
         # TODO： 修改这里传入的参数
-        self.trainer = train.Trainer(
+        self.trainer = trainer.Trainer(
             # None, 把loss写入文件的函数
             write_loss,
             # 看做class trainer中的action_lim

@@ -10,18 +10,6 @@
 
 ├─examples_in_moziAI_platform_
 
-│  ├─air4v4_maddpg案例
-
-│  ├─demo案例 # 这个是自己写的小case
-
-│  ├─heli_anti_sub案例
-
-│  ├─rule_bot案例
-
-│  ├─uav_anti_tank案例
-
-│  └─海峡风暴案例
-
 │
 
 ├─learning_pytorch

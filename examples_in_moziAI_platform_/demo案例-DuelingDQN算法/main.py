@@ -3,7 +3,7 @@ import datetime
 import numpy as np
 
 # 调用Agent算法：DuelingDQN  
-from DuelingDQN import train
+from DuelingDQN import trainer
 from DuelingDQN import buffer
 from env import Env_Uav_Avoid_Tank
 import etc

@@ -1,18 +1,15 @@
 import os
+
+import numpy as np
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import torch.nn.functional as F
-import numpy as np
+import torch.optim as optim
 
 BATCH_SIZE = 32
 LR = 0.01
 EPSILON = 0.9
 GAMMA = 0.9
-TARGET_REPLACE_ITER = 100
-MEMORY_CAPACITY = 2000
-EPISODE_NUM = 400
-
 
 class duelingdqnNet(nn.Module):
     def __init__(self, STATE_NUM, ACTION_NUM):

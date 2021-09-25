@@ -8,6 +8,12 @@
 
 │
 
+├─ GCN
+
+│  └─karateClub 空手道俱乐部分解
+
+│
+
 ├─examples_in_moziAI_platform_
 
 │
@@ -16,13 +22,7 @@
 
 │  ├─Deep Learning with PyTorch
 
-│  └─动手学深度学习PYTORCH版 # d2lzh 第一版的notes
-
-│
-
-├─MADDPG算法
-
-│  └─maddpg-torch
+│  └─动手学深度学习PYTORCH版 # d2lzh 第一版的部分notes，有时间会学习第二版
 
 │
 
@@ -42,5 +42,10 @@
 
 │
 
-└─群体建模
+└──群体建模
 
+    ├─viscek_model
+
+    └─人工蜂群算法
+
+[训练教程](https://changqingaas.github.io/MARL/MADRL/%E5%A2%A8%E5%AD%90%E5%B9%B3%E5%8F%B0%E8%AE%AD%E7%BB%83%E6%95%99%E7%A8%8B/)

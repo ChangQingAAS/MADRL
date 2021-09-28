@@ -18,12 +18,6 @@
 
 │
 
-├─learning_pytorch
-
-│  ├─Deep Learning with PyTorch
-
-│  └─动手学深度学习PYTORCH版 # d2lzh 第一版的部分notes，有时间会学习第二版
-
 │
 
 ├─mfrl # 平均场算法蔟

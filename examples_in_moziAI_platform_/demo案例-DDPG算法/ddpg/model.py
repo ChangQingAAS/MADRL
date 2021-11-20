@@ -6,6 +6,7 @@ from mozi_utils import pylog
 
 EPS = 0.003
 
+# 扇入初始化，可用于初始化权重参数
 def fanin_init(size, fanin=None):
     # fain = fanin or size[0]
     v = 1. / np.sqrt(256)

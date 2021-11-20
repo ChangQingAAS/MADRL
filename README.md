@@ -8,10 +8,6 @@
 
 │
 
-├─ GCN
-
-│  └─karateClub 空手道俱乐部分解
-
 │
 
 ├─examples_in_moziAI_platform_
